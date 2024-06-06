@@ -10,6 +10,8 @@
     "prisma": "prisma"
   },
   "dependencies": {
+    "@apollo/client": "^3.10.4",
+    "@apollo/experimental-nextjs-app-support": "^0.11.0",
     "@prisma/client": "^5.15.0",
     "apollo-server-micro": "^3.13.0",
     "cookie": "^0.6.0",
