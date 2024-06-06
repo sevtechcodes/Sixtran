@@ -1,18 +1,20 @@
 'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 
 export default function LoginForm () {
-  
   const [email, setEmail] = useState('');
+  const router = useRouter();
 
   function handleChange (event) {
-    setEmail(event.target.value)
+    setEmail(event.target.value);
   }
 
   function handleSubmit (event) {
-    event.preventDefault()
-    console.log(email);
+    event.preventDefault();
+    router.push(`/setup?email=${email}`);
   }
 
   return (
@@ -23,5 +25,5 @@ export default function LoginForm () {
         <button type='submit'>Get started</button>
       </form>
     </>
-  )
+  );
 }
