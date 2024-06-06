@@ -1,6 +1,5 @@
 import { Inter } from 'next/font/google';
-import { ApolloWrapper } from './ApolloWrapper';
-
+import { CookiesProvider } from 'next-client-cookies/server';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -14,7 +13,7 @@ export default function RootLayout ({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ApolloWrapper className={inter.className}>{children}</ApolloWrapper>
+        <CookiesProvider className={inter.className}>{children}</CookiesProvider>
       </body>
     </html>
   );
