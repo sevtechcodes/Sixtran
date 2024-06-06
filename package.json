@@ -15,10 +15,10 @@
     "@prisma/client": "^5.15.0",
     "apollo-server-micro": "^3.13.0",
     "cookie": "^0.6.0",
+    "cookies-next": "^4.2.1",
     "dotenv": "^16.4.5",
     "graphql": "^16.8.1",
     "next": "14.2.3",
-    "next-client-cookies": "^1.1.1",
     "react": "^18",
     "react-dom": "^18"
   },

@@ -3,16 +3,17 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { apiCall } from '../lib/fivetran';
-import { useCookies } from 'next-client-cookies';
+import { getCookie, setCookie } from 'cookies-next';
+
 
 export default function CredentialsForm () {
   const [formData, setFormData] = useState({apiKey: '', apiSecret: ''});
   const [validCredentials, setValidCredentials] = useState(false);
   const router = useRouter();
-  const cookies = useCookies();
-  const cookie = cookies.get('user');
-  console.log('effect');
+
+  const cookie = getCookie('user');
   console.log(cookie);
+
   
   useEffect(() => {
   }, []);
@@ -32,7 +33,7 @@ export default function CredentialsForm () {
 
     if (response.status === 200) {
       setValidCredentials(true);
-      cookies.set('user',  JSON.stringify({fivetranApiKey: formData.apiKey, fivetranApiSecret: formData.apiSecret}));
+      setCookie('user',  JSON.stringify({fivetranApiKey: formData.apiKey, fivetranApiSecret: formData.apiSecret}));
       // router.push('/dashboard');
     }
 
