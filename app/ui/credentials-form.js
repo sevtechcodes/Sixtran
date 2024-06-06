@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { apiCall } from '../lib/fivetran';
 
 
 export default function CredentialsForm () {
   const [formData, setFormData] = useState({apiKey: '', apiSecret: ''});
+  const [validCredentials, setValidCredentials] = useState(false);
   const router = useRouter();
 
   function handleChange (event) {
@@ -13,9 +15,15 @@ export default function CredentialsForm () {
     setFormData(prevFormData => ({...prevFormData, [name]: value}));
   }
 
-  function handleSubmit (event) {
+  async function handleSubmit (event) {
     event.preventDefault();
-    router.push('/dashboard');
+    const response = await apiCall('account/info', formData.apiKey, formData.apiSecret);
+    if (response.status === 200) {
+      setValidCredentials(true);
+
+      // router.push('/dashboard');
+    }
+
   }
 
   return (
