@@ -2,8 +2,10 @@ import React, { useState, useMemo } from 'react';
 import DataTable from 'react-data-table-component';
 
 
-export default function ConnectorTable ({ data }) {
+export default function ConnectorTable ({ data, onPause}) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedRows, setSelectedRows] = useState(false);
+  const [toggledClearRows, setToggleClearRows] = useState(false);
 
   const columns = useMemo(() => [
     {
@@ -42,6 +44,19 @@ export default function ConnectorTable ({ data }) {
     );
   }, [data, searchTerm]);
 
+  function handleChange ({selectedRows}) {
+    setSelectedRows(selectedRows);
+  }
+
+  function handleClearRows () {
+    setToggleClearRows(!toggledClearRows);
+  }
+
+  async function pauseConnectors () {
+    await onPause();
+    handleClearRows();
+  }
+
   return (
     <>
       <div className="p-4">
@@ -52,7 +67,22 @@ export default function ConnectorTable ({ data }) {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="mb-4 p-2 border border-gray-300 rounded"
         />
-        <DataTable columns={columns} data={filteredData}/>
+        <DataTable
+          columns={columns}
+          data={filteredData}
+          selectableRows
+          onSelectedRowsChange={handleChange}
+          clearSelectedRows={toggledClearRows}
+        />
+      </div>
+      <div className='flex justify-around'>
+        <button onClick={pauseConnectors}>Pause</button>
+        <button>Sync</button>
+        <button>Hsitorical Sync</button>
+        <form>
+          <input type='number' placeholder='New sync frequency'></input>
+          <button>Change Sync frequency</button>
+        </form>
       </div>
     </>
   );

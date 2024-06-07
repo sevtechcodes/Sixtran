@@ -10,7 +10,8 @@ export default async function handler (req, res) {
   try {
     const response = await fetch(`${URL}${endpoint}`, {
       method: method,
-      headers: headers
+      headers: headers,
+      body: method === 'GET'? undefined : req.body,
     });
     const data = await response.json();
     res.status(response.status).json(data);

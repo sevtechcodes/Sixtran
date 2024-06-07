@@ -5,6 +5,12 @@ import { useEffect, useState } from 'react';
 import { apiCall } from '../lib/fivetran';
 import ConnectorTable from '../ui/connector-table';
 
+
+async function getConnectors (group, fivetranApiKey, fivetranApiSecret) {
+  const res = await apiCall(`groups/${group.id}/connectors`, fivetranApiKey, fivetranApiSecret);
+  return res.body.data.items;
+}
+
 export default function Page () {
   const [credentials, setCredentials] = useState({});
   const [groups, setGroups] = useState([]);
@@ -24,9 +30,7 @@ export default function Page () {
         const groupsData = res.body.data.items;
         setGroups(groupsData);
         setSelectedGroup(groupsData[0]);
-        
-        res = await apiCall(`groups/${groupsData[0].id}/connectors`, fivetranApiKey, fivetranApiSecret);
-        const connectorsData = res.body.data.items;
+        const connectorsData = await getConnectors(groupsData[0], fivetranApiKey, fivetranApiSecret);
         setConnectors(connectorsData);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -39,9 +43,23 @@ export default function Page () {
   async function handleSelect (event) {
     event.preventDefault();
     selectedGroup(event.target.value);
-    res = await apiCall(`groups/${selectedGroup.id}/connectors`, credentials.fivetranApiKey, credentials.fivetranApiSecret);
-    const connectorsData = res.body.data.items;
     setConnectors(connectorsData);
+  }
+
+  async function pauseConnectors (connectors) {
+    console.log('pausing');
+    try {
+      await Promise.all(
+        connectors.map((row) =>
+          apiCall(`connectors/${row.id}`, credentials.fivetranApiKey, credentials.fivetranApiSecret, 'PATCH', { paused: true })
+        )
+      );
+      console.log('finished pausing');
+      const connectorsData = await getConnectors(selectedGroup);
+      setConnectors(connectorsData);
+    } catch (error) {
+      console.error('Error pausing connectors:', error);
+    }
   }
 
 
@@ -53,7 +71,7 @@ export default function Page () {
         {groups.map( (group) => (<option value={group} key={group.id}>{group.name}</option>))}
       </select> }
       <div>
-        { connectors.length > 0 && <ConnectorTable data={connectors} /> } 
+        { connectors.length > 0 && <ConnectorTable data={connectors} onPause={pauseConnectors}/> } 
       </div>
     </>
   );
