@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import DataTable from 'react-data-table-component';
+import { formatDistanceToNow, compareAsc } from 'date-fns';
 
 const SYNC_FREQS = [5, 15, 30, 60, 120, 180, 360, 480, 720, 1440];
 
@@ -11,7 +12,7 @@ export default function ConnectorTable ({ data, onPause, onSync, onFreq, onResyn
 
   const columns = useMemo(() => [
     {
-      name: 'ID',
+      name: 'Connector ID',
       selector: row => row.id,
       sortable: true
     },
@@ -32,7 +33,7 @@ export default function ConnectorTable ({ data, onPause, onSync, onFreq, onResyn
     },
     {
       name: 'Last Sync',
-      selector: row => row.succeeded_at,
+      selector: row => row.succeeded_at ? formatDistanceToNow(new Date(row.succeeded_at)) : 'Never',
       sortable: true
     },
   ], []);
