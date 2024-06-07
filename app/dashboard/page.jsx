@@ -74,7 +74,7 @@ export default function Page () {
 
   return (
     <>
-      <label>Connector Group: </label>
+      <label>Select connector group: </label>
       {groups.length > 0 &&
       <select onChange={handleSelect}>
         {groups.map( (group) => (<option value={group} key={group.id}>{group.name}</option>))}

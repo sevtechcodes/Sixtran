@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import DataTable from 'react-data-table-component';
-import { formatDistanceToNow, compareAsc } from 'date-fns';
+import { formatDuration, formatDistanceToNow, compareAsc } from 'date-fns';
 
 const SYNC_FREQS = [5, 15, 30, 60, 120, 180, 360, 480, 720, 1440];
 
@@ -23,7 +23,7 @@ export default function ConnectorTable ({ data, onPause, onSync, onFreq, onResyn
     },
     {
       name: 'Sync Frequency',
-      selector: row => row.sync_frequency,
+      selector: row => formatDuration({minutes: row.sync_frequency}),
       sortable: true
     },
     {
@@ -100,7 +100,7 @@ export default function ConnectorTable ({ data, onPause, onSync, onFreq, onResyn
         <form onSubmit={freqConnectors}>
           <button type='submit'>Change sync frequency: </button>
           <select value={selectedFrequency} onChange={e => setSelectedFrequency(e.target.value)}>
-            {SYNC_FREQS.map(freq => <option key={freq} value={freq}>{freq + ' min'}</option>)}
+            {SYNC_FREQS.map(freq => <option key={freq} value={freq}>{freq + ' minutes'}</option>)}
           </select>
         </form>
       </div>
