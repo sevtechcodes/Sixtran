@@ -53,7 +53,7 @@ export default function ConnectorTable ({ data, onPause}) {
   }
 
   async function pauseConnectors () {
-    await onPause();
+    await onPause(selectedRows);
     handleClearRows();
   }
 

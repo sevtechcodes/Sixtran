@@ -6,12 +6,13 @@ export default async function handler (req, res) {
   const headers = new Headers();
   const basicAuth = 'Basic ' + btoa(`${apiKey}:${apiSecret}`);
   headers.append('Authorization', basicAuth);
-
+  headers.append('Content-Type', 'application/json');
   try {
+    console.log(`${URL}${endpoint}`);
     const response = await fetch(`${URL}${endpoint}`, {
       method: method,
       headers: headers,
-      body: method === 'GET'? undefined : req.body,
+      body: method === 'GET'? undefined : JSON.stringify(req.body),
     });
     const data = await response.json();
     res.status(response.status).json(data);

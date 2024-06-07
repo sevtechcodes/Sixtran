@@ -47,15 +47,13 @@ export default function Page () {
   }
 
   async function pauseConnectors (connectors) {
-    console.log('pausing');
     try {
       await Promise.all(
         connectors.map((row) =>
           apiCall(`connectors/${row.id}`, credentials.fivetranApiKey, credentials.fivetranApiSecret, 'PATCH', { paused: true })
         )
       );
-      console.log('finished pausing');
-      const connectorsData = await getConnectors(selectedGroup);
+      const connectorsData = await getConnectors(selectedGroup, credentials.fivetranApiKey, credentials.fivetranApiSecret);
       setConnectors(connectorsData);
     } catch (error) {
       console.error('Error pausing connectors:', error);
