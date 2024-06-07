@@ -57,6 +57,12 @@ export default function Page () {
     const connectorsData = await getConnectors(selectedGroup, credentials.fivetranApiKey, credentials.fivetranApiSecret);
     setConnectors(connectorsData);
   }
+
+  async function freqConnectors (connectors, freq) {
+    await  modifyConnectors(connectors, credentials.fivetranApiKey, credentials.fivetranApiSecret, { sync_frequency: freq });
+    const connectorsData = await getConnectors(selectedGroup, credentials.fivetranApiKey, credentials.fivetranApiSecret);
+    setConnectors(connectorsData);
+  }
   
 
 
@@ -68,7 +74,11 @@ export default function Page () {
         {groups.map( (group) => (<option value={group} key={group.id}>{group.name}</option>))}
       </select> }
       <div>
-        { connectors.length > 0 && <ConnectorTable data={connectors} onPause={pauseConnectors} onSync={syncConnectors}/> } 
+        { connectors.length > 0 && <ConnectorTable data={connectors}
+          onPause={pauseConnectors}
+          onSync={syncConnectors}
+          onFreq={freqConnectors}
+        /> } 
       </div>
     </>
   );

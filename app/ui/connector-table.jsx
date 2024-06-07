@@ -1,11 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import DataTable from 'react-data-table-component';
 
+const SYNC_FREQS = [5, 15, 30, 60, 120, 180, 360, 480, 720, 1440];
 
-export default function ConnectorTable ({ data, onPause, onSync}) {
+export default function ConnectorTable ({ data, onPause, onSync, onFreq}) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState(false);
   const [toggledClearRows, setToggleClearRows] = useState(false);
+  const [selectedFrequency, setSelectedFrequency] = useState(SYNC_FREQS[0]);
 
   const columns = useMemo(() => [
     {
@@ -62,6 +64,12 @@ export default function ConnectorTable ({ data, onPause, onSync}) {
     handleClearRows();
   }
 
+  async function freqConnectors (event) {
+    event.preventDefault();
+    onFreq(selectedRows, selectedFrequency);
+    handleClearRows();
+  }
+
   return (
     <>
       <div className="p-4">
@@ -84,9 +92,11 @@ export default function ConnectorTable ({ data, onPause, onSync}) {
         <button onClick={pauseConnectors}>Pause</button>
         <button onClick={syncConnectors}>Sync</button>
         <button>Hsitorical Sync</button>
-        <form>
-          <input type='number' placeholder='New sync frequency'></input>
-          <button>Change Sync frequency</button>
+        <form onSubmit={freqConnectors}>
+          <button type='submit'>Change sync frequency: </button>
+          <select value={selectedFrequency} onChange={e => setSelectedFrequency(e.target.value)}>
+            {SYNC_FREQS.map(freq => <option key={freq} value={freq}>{freq + ' min'}</option>)}
+          </select>
         </form>
       </div>
     </>
