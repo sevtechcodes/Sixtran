@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import DataTable from 'react-data-table-component';
 
 
-export default function ConnectorTable ({ data, onPause}) {
+export default function ConnectorTable ({ data, onPause, onSync}) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState(false);
   const [toggledClearRows, setToggleClearRows] = useState(false);
@@ -57,6 +57,11 @@ export default function ConnectorTable ({ data, onPause}) {
     handleClearRows();
   }
 
+  async function syncConnectors () {
+    await onSync(selectedRows);
+    handleClearRows();
+  }
+
   return (
     <>
       <div className="p-4">
@@ -77,7 +82,7 @@ export default function ConnectorTable ({ data, onPause}) {
       </div>
       <div className='flex justify-around'>
         <button onClick={pauseConnectors}>Pause</button>
-        <button>Sync</button>
+        <button onClick={syncConnectors}>Sync</button>
         <button>Hsitorical Sync</button>
         <form>
           <input type='number' placeholder='New sync frequency'></input>

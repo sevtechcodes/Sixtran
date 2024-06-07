@@ -2,20 +2,17 @@
 
 import { getCookie } from 'cookies-next';
 import { useEffect, useState } from 'react';
-import { apiCall } from '../lib/fivetran';
+import { apiCall, modifyConnectors } from '../lib/fivetran';
 import ConnectorTable from '../ui/connector-table';
+import { getConnectors } from '../lib/fivetran';
 
-
-async function getConnectors (group, fivetranApiKey, fivetranApiSecret) {
-  const res = await apiCall(`groups/${group.id}/connectors`, fivetranApiKey, fivetranApiSecret);
-  return res.body.data.items;
-}
 
 export default function Page () {
   const [credentials, setCredentials] = useState({});
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [connectors, setConnectors] = useState([]);
+  
 
   useEffect(() => {
     const {fivetranApiKey, fivetranApiSecret} = JSON.parse(getCookie('user'));
@@ -26,10 +23,12 @@ export default function Page () {
         return;
       }
       try {
+        // get groups
         let res = await apiCall('groups', fivetranApiKey, fivetranApiSecret);
         const groupsData = res.body.data.items;
         setGroups(groupsData);
         setSelectedGroup(groupsData[0]);
+        // get connectors
         const connectorsData = await getConnectors(groupsData[0], fivetranApiKey, fivetranApiSecret);
         setConnectors(connectorsData);
       } catch (error) {
@@ -46,19 +45,19 @@ export default function Page () {
     setConnectors(connectorsData);
   }
 
+  // refactor these functions:
   async function pauseConnectors (connectors) {
-    try {
-      await Promise.all(
-        connectors.map((row) =>
-          apiCall(`connectors/${row.id}`, credentials.fivetranApiKey, credentials.fivetranApiSecret, 'PATCH', { paused: true })
-        )
-      );
-      const connectorsData = await getConnectors(selectedGroup, credentials.fivetranApiKey, credentials.fivetranApiSecret);
-      setConnectors(connectorsData);
-    } catch (error) {
-      console.error('Error pausing connectors:', error);
-    }
+    await  modifyConnectors(connectors, credentials.fivetranApiKey, credentials.fivetranApiSecret, { paused: true });
+    const connectorsData = await getConnectors(selectedGroup, credentials.fivetranApiKey, credentials.fivetranApiSecret);
+    setConnectors(connectorsData);
   }
+
+  async function syncConnectors (connectors) {
+    await  modifyConnectors(connectors, credentials.fivetranApiKey, credentials.fivetranApiSecret, { paused: false });
+    const connectorsData = await getConnectors(selectedGroup, credentials.fivetranApiKey, credentials.fivetranApiSecret);
+    setConnectors(connectorsData);
+  }
+  
 
 
   return (
@@ -69,7 +68,7 @@ export default function Page () {
         {groups.map( (group) => (<option value={group} key={group.id}>{group.name}</option>))}
       </select> }
       <div>
-        { connectors.length > 0 && <ConnectorTable data={connectors} onPause={pauseConnectors}/> } 
+        { connectors.length > 0 && <ConnectorTable data={connectors} onPause={pauseConnectors} onSync={syncConnectors}/> } 
       </div>
     </>
   );
