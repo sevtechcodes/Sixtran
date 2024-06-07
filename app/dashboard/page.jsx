@@ -2,7 +2,7 @@
 
 import { getCookie } from 'cookies-next';
 import { useEffect, useState } from 'react';
-import { apiCall, modifyConnectors } from '../lib/fivetran';
+import { apiCall, modifyConnectors, resyncConnectors } from '../lib/fivetran';
 import ConnectorTable from '../ui/connector-table';
 import { getConnectors } from '../lib/fivetran';
 
@@ -63,6 +63,12 @@ export default function Page () {
     const connectorsData = await getConnectors(selectedGroup, credentials.fivetranApiKey, credentials.fivetranApiSecret);
     setConnectors(connectorsData);
   }
+
+  async function HistResyncConnectors (connectors) {
+    await  resyncConnectors(connectors, credentials.fivetranApiKey, credentials.fivetranApiSecret);
+    const connectorsData = await getConnectors(selectedGroup, credentials.fivetranApiKey, credentials.fivetranApiSecret);
+    setConnectors(connectorsData);
+  }
   
 
 
@@ -78,6 +84,7 @@ export default function Page () {
           onPause={pauseConnectors}
           onSync={syncConnectors}
           onFreq={freqConnectors}
+          onResync={HistResyncConnectors}
         /> } 
       </div>
     </>

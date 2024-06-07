@@ -27,3 +27,15 @@ export async function modifyConnectors (connectors, fivetranApiKey, fivetranApiS
     console.error('Error modifying connectors:', error);
   }
 }
+
+export async function resyncConnectors (connectors, fivetranApiKey, fivetranApiSecret) {
+  try {
+    await Promise.all(
+      connectors.map((connector) =>
+        apiCall(`connectors/${connector.id}/resync`, fivetranApiKey, fivetranApiSecret, 'POST')
+      )
+    );
+  } catch (error) {
+    console.error('Error resyncing connectors:', error);
+  }
+}

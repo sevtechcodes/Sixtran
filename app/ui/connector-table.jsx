@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 
 const SYNC_FREQS = [5, 15, 30, 60, 120, 180, 360, 480, 720, 1440];
 
-export default function ConnectorTable ({ data, onPause, onSync, onFreq}) {
+export default function ConnectorTable ({ data, onPause, onSync, onFreq, onResync}) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState(false);
   const [toggledClearRows, setToggleClearRows] = useState(false);
@@ -69,6 +69,10 @@ export default function ConnectorTable ({ data, onPause, onSync, onFreq}) {
     onFreq(selectedRows, selectedFrequency);
     handleClearRows();
   }
+  async function resyncConnectors () {
+    onResync(selectedRows);
+    handleClearRows();
+  }
 
   return (
     <>
@@ -91,7 +95,7 @@ export default function ConnectorTable ({ data, onPause, onSync, onFreq}) {
       <div className='flex justify-around'>
         <button onClick={pauseConnectors}>Pause</button>
         <button onClick={syncConnectors}>Sync</button>
-        <button>Hsitorical Sync</button>
+        <button onClick={resyncConnectors}>Historical Sync</button>
         <form onSubmit={freqConnectors}>
           <button type='submit'>Change sync frequency: </button>
           <select value={selectedFrequency} onChange={e => setSelectedFrequency(e.target.value)}>
