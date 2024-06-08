@@ -132,14 +132,16 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
           onChange={(e) => setSearchTerm(e.target.value)}
           className="m-4 border border-black rounded text-xl w-1/4 min-h-1 text-lg p-1"
         />
-        <DataTable
-          columns={columns}
-          data={filteredData}
-          selectableRows
-          onSelectedRowsChange={handleRowSelected}
-          clearSelectedRows={toggledClearRows}
-          customStyles={customStyles}
-        />
+        <div className='border'>
+          <DataTable
+            columns={columns}
+            data={filteredData}
+            selectableRows
+            onSelectedRowsChange={handleRowSelected}
+            clearSelectedRows={toggledClearRows}
+            customStyles={customStyles}
+          />
+        </div>
       </div>
       <div className='flex justify-around mt-20'>
         <button onClick={pauseConnectors}
