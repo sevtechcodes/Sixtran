@@ -16,7 +16,7 @@ export default function Page () {
   const [pending, setPending] = useState(true);
   
 
-  useMemo(() => {
+  useEffect(() => {
     const {fivetranApiKey, fivetranApiSecret} = JSON.parse(getCookie('user'));
     setCredentials({fivetranApiKey, fivetranApiSecret});
 
@@ -53,22 +53,37 @@ export default function Page () {
   }
 
   // TODO: refactor these functions:
-  async function pauseConnectors (connectors) {
-    await  modifyConnectors(connectors, credentials.fivetranApiKey, credentials.fivetranApiSecret, { paused: true });
-    const connectorsData = await getConnectors(selectedGroup, credentials.fivetranApiKey, credentials.fivetranApiSecret);
-    setConnectors(connectorsData);
+  async function pauseConnectors (connectorsToModify) {
+    await  modifyConnectors(connectorsToModify, credentials.fivetranApiKey, credentials.fivetranApiSecret, { paused: true });
+    const updatedConnectors = connectors.map(connector => {
+      if (connectorsToModify.find(c => c.id === connector.id)) {
+        return { ...connector, status: { ...connector.status, sync_state: 'paused' } };
+      }
+      return connector;
+    });
+    setConnectors(updatedConnectors);
   }
 
-  async function unpauseConnectors (connectors) {
-    await  modifyConnectors(connectors, credentials.fivetranApiKey, credentials.fivetranApiSecret, { paused: false });
-    const connectorsData = await getConnectors(selectedGroup, credentials.fivetranApiKey, credentials.fivetranApiSecret);
-    setConnectors(connectorsData);
+  async function unpauseConnectors (connectorsToModify) {
+    await  modifyConnectors(connectorsToModify, credentials.fivetranApiKey, credentials.fivetranApiSecret, { paused: false });
+    const updatedConnectors = connectors.map(connector => {
+      if (connectorsToModify.find(c => c.id === connector.id)) {
+        return { ...connector, status: { ...connector.status, sync_state: 'scheduled' } };
+      }
+      return connector;
+    });
+    setConnectors(updatedConnectors);
   }
 
-  async function freqConnectors (connectors, freq) {
-    await  modifyConnectors(connectors, credentials.fivetranApiKey, credentials.fivetranApiSecret, { sync_frequency: freq });
-    const connectorsData = await getConnectors(selectedGroup, credentials.fivetranApiKey, credentials.fivetranApiSecret);
-    setConnectors(connectorsData);
+  async function freqConnectors (connectorsToModify, freq) {
+    await  modifyConnectors(connectorsToModify, credentials.fivetranApiKey, credentials.fivetranApiSecret, { sync_frequency: freq });
+    const updatedConnectors = connectors.map(connector => {
+      if (connectorsToModify.find(c => c.id === connector.id)) {
+        return { ...connector, sync_frequency: freq };
+      }
+      return connector;
+    });
+    setConnectors(updatedConnectors);
   }
 
   async function HistResyncConnectors (connectors) {

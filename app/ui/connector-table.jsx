@@ -1,7 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import { formatDuration, formatDistanceToNow, compareAsc } from 'date-fns';
 import { PauseIcon, PlayIcon, BackwardIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
+import { roundMinutes } from '../lib/utils';
 
 const SYNC_FREQS = [5, 15, 30, 60, 120, 180, 360, 480, 720, 1440];
 
@@ -31,7 +32,7 @@ const customStyles = {
 
 export default function ConnectorTable ({ data, types, onPause, onUnpause, onFreq, onResync}) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedRows, setSelectedRows] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
   const [toggledClearRows, setToggleClearRows] = useState(false);
   const [selectedFrequency, setSelectedFrequency] = useState(SYNC_FREQS[0]);
 
@@ -56,7 +57,7 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
     },
     {
       name: 'Sync Frequency',
-      selector: row => formatDuration({minutes: row.sync_frequency}),
+      selector: row => formatDuration(roundMinutes(row.sync_frequency)),
       sortable: true
     },
     {
@@ -80,12 +81,13 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
     );
   }, [data, searchTerm]);
 
-  function handleChange ({selectedRows}) {
-    setSelectedRows(selectedRows);
-  }
+  const handleRowSelected = useCallback(state => {
+    setSelectedRows(state.selectedRows);
+  }, []);
 
   function handleClearRows () {
     setToggleClearRows(!toggledClearRows);
+    setSelectedRows([]);
   }
 
   async function pauseConnectors () {
@@ -103,6 +105,7 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
     onFreq(selectedRows, selectedFrequency);
     handleClearRows();
   }
+
   async function resyncConnectors () {
     onResync(selectedRows);
     handleClearRows();
@@ -122,7 +125,7 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
           columns={columns}
           data={filteredData}
           selectableRows
-          onSelectedRowsChange={handleChange}
+          onSelectedRowsChange={handleRowSelected}
           clearSelectedRows={toggledClearRows}
           customStyles={customStyles}
         />
@@ -152,7 +155,7 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
           <select value={selectedFrequency} onChange={e => setSelectedFrequency(e.target.value)}
             className='text-xl'
           >
-            {SYNC_FREQS.map(freq => <option key={freq} value={freq}>{freq + ' minutes'}</option>)}
+            {SYNC_FREQS.map(freq => <option key={freq} value={freq}>{formatDuration(roundMinutes(freq))}</option>)}
           </select>
         </form>
       </div>
