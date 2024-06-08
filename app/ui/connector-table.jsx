@@ -65,11 +65,11 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
       selector: row => {
         switch (row.status.sync_state) {
         case 'paused':
-          return (<div className='px-2 rounded bg-gray-200 text-gray-700'>Paused</div>);
+          return (<div className='px-3 py-2 rounded-2xl bg-gray-200 text-gray-700'>Paused</div>);
         case 'scheduled':
-          return (<div className='px-2 rounded bg-rose-50 text-rose-700'>Scheduled</div>);
+          return (<div className='px-3 py-2 rounded-2xl bg-rose-50 text-rose-700'>Scheduled</div>);
         case 'syncing':
-          return (<div className='px-2 rounded bg-green-200 text-green-700'>Syncing</div>);
+          return (<div className='px-3 py-2 rounded-2xl bg-green-200 text-green-700'>Syncing</div>);
         default:
           return (<div></div>);
         }
