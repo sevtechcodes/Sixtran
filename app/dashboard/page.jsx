@@ -50,14 +50,14 @@ export default function Page () {
     setConnectors(connectorsData);
   }
 
-  // refactor these functions:
+  // TODO: refactor these functions:
   async function pauseConnectors (connectors) {
     await  modifyConnectors(connectors, credentials.fivetranApiKey, credentials.fivetranApiSecret, { paused: true });
     const connectorsData = await getConnectors(selectedGroup, credentials.fivetranApiKey, credentials.fivetranApiSecret);
     setConnectors(connectorsData);
   }
 
-  async function syncConnectors (connectors) {
+  async function unpauseConnectors (connectors) {
     await  modifyConnectors(connectors, credentials.fivetranApiKey, credentials.fivetranApiSecret, { paused: false });
     const connectorsData = await getConnectors(selectedGroup, credentials.fivetranApiKey, credentials.fivetranApiSecret);
     setConnectors(connectorsData);
@@ -88,7 +88,7 @@ export default function Page () {
         { connectors.length > 0 && <ConnectorTable data={connectors}
           types={types}
           onPause={pauseConnectors}
-          onSync={syncConnectors}
+          onUnpause={unpauseConnectors}
           onFreq={freqConnectors}
           onResync={HistResyncConnectors}
         /> } 

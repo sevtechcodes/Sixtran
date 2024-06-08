@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import DataTable from 'react-data-table-component';
 import { formatDuration, formatDistanceToNow, compareAsc } from 'date-fns';
+import { PauseIcon, PlayIcon, BackwardIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
 
 const SYNC_FREQS = [5, 15, 30, 60, 120, 180, 360, 480, 720, 1440];
 
-export default function ConnectorTable ({ data, types, onPause, onSync, onFreq, onResync}) {
+export default function ConnectorTable ({ data, types, onPause, onUnpause, onFreq, onResync}) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState(false);
   const [toggledClearRows, setToggleClearRows] = useState(false);
@@ -70,8 +71,8 @@ export default function ConnectorTable ({ data, types, onPause, onSync, onFreq, 
     handleClearRows();
   }
 
-  async function syncConnectors () {
-    await onSync(selectedRows);
+  async function unpauseConnectors () {
+    await onUnpause(selectedRows);
     handleClearRows();
   }
 
@@ -93,7 +94,7 @@ export default function ConnectorTable ({ data, types, onPause, onSync, onFreq, 
           placeholder="Search..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="mb-4 p-2 border border-gray-300 rounded"
+          className="m-4 px-10 py-2 border border-black rounded text-xl"
         />
         <DataTable
           columns={columns}
@@ -103,13 +104,31 @@ export default function ConnectorTable ({ data, types, onPause, onSync, onFreq, 
           clearSelectedRows={toggledClearRows}
         />
       </div>
-      <div className='flex justify-around'>
-        <button onClick={pauseConnectors}>Pause</button>
-        <button onClick={syncConnectors}>Sync</button>
-        <button onClick={resyncConnectors}>Historical Sync</button>
+      <div className='flex justify-around mt-20'>
+        <button onClick={pauseConnectors}
+          className='border border-black border-2 px-4 text-2xl rounded-lg bg-black text-white'
+        >
+          <PauseIcon className='inline h-8 mx-2'/><span>Pause</span>
+        </button>
+        <button onClick={unpauseConnectors}
+          className='border border-black border-2 px-4 text-2xl rounded-lg bg-black text-white'
+        >
+          <PlayIcon className='inline h-8 mx-2'/><span>Unpause</span>
+        </button>
+        <button onClick={resyncConnectors}
+          className='border border-black border-2 px-4 text-2xl rounded-lg bg-black text-white'
+        >
+          <BackwardIcon className='inline h-8 mx-2'/><span>Historical Sync</span>
+        </button>
         <form onSubmit={freqConnectors}>
-          <button type='submit'>Change sync frequency: </button>
-          <select value={selectedFrequency} onChange={e => setSelectedFrequency(e.target.value)}>
+          <button type='submit'
+            className='border border-black border-2 px-4 text-2xl rounded-lg bg-black text-white'
+          >
+            <AdjustmentsHorizontalIcon className='inline h-8 mx-2'/><span>Change sync frequency:</span>
+          </button>
+          <select value={selectedFrequency} onChange={e => setSelectedFrequency(e.target.value)}
+            className='text-xl'
+          >
             {SYNC_FREQS.map(freq => <option key={freq} value={freq}>{freq + ' minutes'}</option>)}
           </select>
         </form>

@@ -36,9 +36,15 @@ export default function CredentialsForm () {
   return (
     <div className=''>
       <form onSubmit={handleSubmit} className='flex flex-col'>
-        <input name='apiKey' type='text' value={formData.apiKey} onChange={handleChange} placeholder='Fill in API Key'></input>
-        <input name='apiSecret' type='text' value={formData.apiSecret} onChange={handleChange} placeholder='Fill in API Secret'></input>
-        <button type='submit'>Get started</button>
+        <input name='apiKey' type='text' value={formData.apiKey} onChange={handleChange} placeholder='Fill in API Key'
+          className='border mt-10'
+        ></input>
+        <input name='apiSecret' type='text' value={formData.apiSecret} onChange={handleChange} placeholder='Fill in API Secret'
+          className='border mt-10'
+        ></input>
+        <button type='submit'
+          className='mt-10 bg-black text-white text-2xl py-1 px-3 rounded-lg font-bold'
+        >Update credentials</button>
       </form>
     </ div>
   );

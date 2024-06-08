@@ -20,14 +20,14 @@ export default function Page () {
   }
 
   return (
-    <div className='flex flex-row justify-around'>
+    <div className='flex flex-row justify-around pt-40'>
       {validCredentials && <div className='content-center'>
-        <button onClick={handleClick}>Use existing credentials</button>
+        <button onClick={handleClick}
+          className='bg-[#06AB78] text-white text-3xl py-2 px-5 rounded-lg font-bold'
+        >Use existing credentials</button>
       </div>}
 
       <div className='flex flex-col content-center m-20 content-center'>
-        {validCredentials && <h3>Update credentials</h3>}
-        {!validCredentials && <h3>Fill in credentials</h3>}
         <CredentialsForm />
       </div>
     </div>

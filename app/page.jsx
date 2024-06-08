@@ -10,10 +10,17 @@ export default function Home () {
 
 
   return (
-    <main>
-      <h1>Welcome to Sixtran</h1>
-      <p>Your management suite for Fivetran</p>
-      <button onClick={handleClick}>Get started</button>
+    <main className='flex flex-col items-center'>
+      <div className='pt-40'>
+        <h1 className='inline-block text-6xl font-black tracking-[-0.4px]'>Welcome to</h1>
+        <div className='inline-block bg-black m-2 pb-1 px-2 rounded-lg'>
+          <h1 className='text-6xl font-black tracking-[-0.4px] text-white'>Sixtran</h1>
+        </div>
+      </div>
+      <div className='mt-5 mb-20'>
+        <p className='text-xl'>Your management suite for Fivetran</p>
+      </div>
+      <button onClick={handleClick} className='bg-[#06AB78] text-white text-4xl py-2 px-5 rounded-lg font-bold'>Get started</button>
     </main>
   );
 }
