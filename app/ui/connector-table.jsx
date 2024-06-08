@@ -116,7 +116,7 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
           placeholder="Search..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="m-4 px-10 py-2 border border-black rounded text-xl"
+          className="m-4 border border-black rounded text-xl w-1/4 min-h-1 text-lg p-1"
         />
         <DataTable
           columns={columns}

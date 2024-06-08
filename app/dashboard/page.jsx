@@ -13,6 +13,7 @@ export default function Page () {
   const [types, setTypes] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [connectors, setConnectors] = useState([]);
+  const [pending, setPending] = useState(true);
   
 
   useMemo(() => {
@@ -36,6 +37,7 @@ export default function Page () {
         // get connectors
         const connectorsData = await getConnectors(groupsData[0], fivetranApiKey, fivetranApiSecret);
         setConnectors(connectorsData);
+        setPending(false);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -79,13 +81,15 @@ export default function Page () {
 
   return (
     <>
-      <label>Select connector group: </label>
-      {groups.length > 0 &&
-      <select onChange={handleSelect}>
-        {groups.map( (group) => (<option value={group} key={group.id}>{group.name}</option>))}
-      </select> }
+      <div className='m-10 font-bold text-lg'>
+        <label>Select your connector group: </label>
+        {!pending &&
+        <select onChange={handleSelect} className='bg-[#06AB78] text-white rounded p-1'>
+          {groups.map( (group) => (<option value={group} key={group.id}>{group.name}</option>))}
+        </select> }
+      </div>
       <div>
-        { connectors.length > 0 && <ConnectorTable data={connectors}
+        { !pending && <ConnectorTable data={connectors}
           types={types}
           onPause={pauseConnectors}
           onUnpause={unpauseConnectors}
