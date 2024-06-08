@@ -10,6 +10,7 @@ import { getConnectors } from '../lib/fivetran';
 export default function Page () {
   const [credentials, setCredentials] = useState({});
   const [groups, setGroups] = useState([]);
+  const [types, setTypes] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [connectors, setConnectors] = useState([]);
   
@@ -23,8 +24,12 @@ export default function Page () {
         return;
       }
       try {
+        // get types
+        let res = await apiCall('metadata/connector-types?limit=1000', fivetranApiKey, fivetranApiSecret);
+        const typesData = res.body.data.items;
+        setTypes(typesData);
         // get groups
-        let res = await apiCall('groups', fivetranApiKey, fivetranApiSecret);
+        res = await apiCall('groups', fivetranApiKey, fivetranApiSecret);
         const groupsData = res.body.data.items;
         setGroups(groupsData);
         setSelectedGroup(groupsData[0]);
@@ -81,6 +86,7 @@ export default function Page () {
       </select> }
       <div>
         { connectors.length > 0 && <ConnectorTable data={connectors}
+          types={types}
           onPause={pauseConnectors}
           onSync={syncConnectors}
           onFreq={freqConnectors}

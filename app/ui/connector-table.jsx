@@ -4,7 +4,7 @@ import { formatDuration, formatDistanceToNow, compareAsc } from 'date-fns';
 
 const SYNC_FREQS = [5, 15, 30, 60, 120, 180, 360, 480, 720, 1440];
 
-export default function ConnectorTable ({ data, onPause, onSync, onFreq, onResync}) {
+export default function ConnectorTable ({ data, types, onPause, onSync, onFreq, onResync}) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState(false);
   const [toggledClearRows, setToggleClearRows] = useState(false);
@@ -18,7 +18,17 @@ export default function ConnectorTable ({ data, onPause, onSync, onFreq, onResyn
     },
     {
       name: 'Source',
-      selector: row => row.service,
+      selector: row => {
+        return (
+          <>
+            <div className='flex'>
+              {/* TODO: change this to use Image */}
+              <img className='max-h-5' src={types.filter((type) => type.id === row.service)[0].icons[0]}></img>
+              <p>{types.filter((type) => type.id === row.service)[0].name}</p>
+            </div>
+          </>
+        );
+      },
       sortable: true
     },
     {
