@@ -5,6 +5,30 @@ import { PauseIcon, PlayIcon, BackwardIcon, AdjustmentsHorizontalIcon } from '@h
 
 const SYNC_FREQS = [5, 15, 30, 60, 120, 180, 360, 480, 720, 1440];
 
+const customStyles = {
+  rows: {
+    style: {
+      minHeight: '72px',
+      fontSize: '1rem',
+      fontWeight: '500'
+    },
+  },
+  headCells: {
+    style: {
+      paddingLeft: '8px', // override the cell padding for head cells
+      paddingRight: '8px',
+      fontSize: '1.5rem',
+      fontWeight: '800'
+    },
+  },
+  cells: {
+    style: {
+      paddingLeft: '8px', // override the cell padding for data cells
+      paddingRight: '8px',
+    },
+  },
+};
+
 export default function ConnectorTable ({ data, types, onPause, onUnpause, onFreq, onResync}) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState(false);
@@ -22,11 +46,9 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
       selector: row => {
         return (
           <>
-            <div className='flex'>
-              {/* TODO: change this to use Image */}
-              <img className='max-h-5' src={types.filter((type) => type.id === row.service)[0].icons[0]}></img>
-              <p>{types.filter((type) => type.id === row.service)[0].name}</p>
-            </div>
+            {/* TODO: change this to use Image */}
+            <img className='max-h-5 inline mx-3' src={types.filter((type) => type.id === row.service)[0].icons[0]}></img>
+            <span>{types.filter((type) => type.id === row.service)[0].name}</span>
           </>
         );
       },
@@ -102,27 +124,28 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
           selectableRows
           onSelectedRowsChange={handleChange}
           clearSelectedRows={toggledClearRows}
+          customStyles={customStyles}
         />
       </div>
       <div className='flex justify-around mt-20'>
         <button onClick={pauseConnectors}
-          className='border border-black border-2 px-4 text-2xl rounded-lg bg-black text-white'
+          className='border border-black border-2 px-4 text-2xl rounded-lg bg-black text-white font-bold'
         >
           <PauseIcon className='inline h-8 mx-2'/><span>Pause</span>
         </button>
         <button onClick={unpauseConnectors}
-          className='border border-black border-2 px-4 text-2xl rounded-lg bg-black text-white'
+          className='border border-black border-2 px-4 text-2xl rounded-lg bg-black text-white font-bold'
         >
           <PlayIcon className='inline h-8 mx-2'/><span>Unpause</span>
         </button>
         <button onClick={resyncConnectors}
-          className='border border-black border-2 px-4 text-2xl rounded-lg bg-black text-white'
+          className='border border-black border-2 px-4 text-2xl rounded-lg bg-black text-white font-bold'
         >
           <BackwardIcon className='inline h-8 mx-2'/><span>Historical Sync</span>
         </button>
         <form onSubmit={freqConnectors}>
           <button type='submit'
-            className='border border-black border-2 px-4 text-2xl rounded-lg bg-black text-white'
+            className='border border-black border-2 px-4 text-2xl rounded-lg bg-black text-white font-bold'
           >
             <AdjustmentsHorizontalIcon className='inline h-8 mx-2'/><span>Change sync frequency:</span>
           </button>

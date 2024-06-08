@@ -1,7 +1,7 @@
 'use client';
 
 import { getCookie } from 'cookies-next';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { apiCall, modifyConnectors, resyncConnectors } from '../lib/fivetran';
 import ConnectorTable from '../ui/connector-table';
 import { getConnectors } from '../lib/fivetran';
@@ -15,7 +15,7 @@ export default function Page () {
   const [connectors, setConnectors] = useState([]);
   
 
-  useEffect(() => {
+  useMemo(() => {
     const {fivetranApiKey, fivetranApiSecret} = JSON.parse(getCookie('user'));
     setCredentials({fivetranApiKey, fivetranApiSecret});
 
