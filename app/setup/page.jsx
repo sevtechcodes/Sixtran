@@ -23,7 +23,7 @@ export default function Page () {
     <div className='flex flex-row justify-around pt-40'>
       {validCredentials && <div className='content-center'>
         <button onClick={handleClick}
-          className='bg-[#06AB78] text-white text-3xl py-2 px-5 rounded-lg font-bold'
+          className='bg-[#06AB78] text-white text-3xl py-2 px-5 rounded-lg font-bold hover:bg-[#059B6C]'
         >Use existing credentials</button>
       </div>}
 

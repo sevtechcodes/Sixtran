@@ -42,7 +42,7 @@ export default function CredentialsForm () {
           className='border mt-10 border-black rounded px-2'
         ></input>
         <button type='submit'
-          className='mt-10 bg-black text-white text-2xl py-1 px-3 rounded-lg font-bold'
+          className='mt-10 bg-black text-white text-2xl py-1 px-3 rounded-lg font-bold  hover:bg-[#5C5B61]'
         >Update credentials</button>
       </form>
     </ div>

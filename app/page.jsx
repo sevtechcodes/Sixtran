@@ -20,7 +20,7 @@ export default function Home () {
       <div className='mt-5 mb-20'>
         <p className='text-xl text-gray-500 font-normal'>Your management suite for Fivetran</p>
       </div>
-      <button onClick={handleClick} className='bg-[#06AB78] text-white text-4xl py-2 px-5 rounded-lg font-bold'>Get started</button>
+      <button onClick={handleClick} className='bg-[#06AB78] text-white text-4xl py-2 px-5 rounded-lg font-bold hover:bg-[#059B6C]'>Get started</button>
     </main>
   );
 }

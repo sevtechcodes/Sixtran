@@ -40,7 +40,9 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
   const columns = useMemo(() => [
     {
       name: 'Connector ID',
-      selector: row => <Link href={`dashboard/${row.id}`}>{row.id}</Link>,
+      selector: row => <Link href={`dashboard/${row.id}`}
+        className='hover:underline hover:font-bold hover:bg-[#5C5B61]'
+      >{row.id}</Link>,
       sortable: true,
       sortFunction: (a, b) => b.id.localeCompare(a.id)
     },
@@ -160,29 +162,29 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
       </div>
       <div className='flex justify-around mt-20'>
         <button onClick={pauseConnectors}
-          className='border border-black border-2 px-4 text-s rounded-lg bg-black text-white font-bold'
+          className='py-1 px-4 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
         >
           <PauseIcon className='inline h-6 mx-2'/><span>Pause</span>
         </button>
         <button onClick={unpauseConnectors}
-          className='border border-black border-2 px-4 text-s rounded-lg bg-black text-white font-bold'
+          className='py-1 px-4 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
         >
           <PlayIcon className='inline h-6 mx-2'/><span>Unpause</span>
         </button>
         <button onClick={syncConnectors}
-          className='border border-black border-2 px-4 text-s rounded-lg bg-black text-white font-bold'
+          className='py-1 px-4 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
         >
           <ArrowPathIcon className='inline h-6 mx-2'/><span>Sync</span>
         </button>
 
         <button onClick={resyncConnectors}
-          className='border border-black border-2 px-4 text-s rounded-lg bg-black text-white font-bold'
+          className='py-1 px-4 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
         >
           <BackwardIcon className='inline h-6 mx-2'/><span>Historical Sync</span>
         </button>
         <form onSubmit={freqConnectors}>
           <button type='submit'
-            className='border border-black border-2 px-4 text-s rounded-lg bg-black text-white font-bold'
+            className='py-1 px-4 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
           >
             <AdjustmentsHorizontalIcon className='inline h-6 mx-2'/><span>Sync frequency:</span>
           </button>
