@@ -8,7 +8,6 @@ export default async function handler (req, res) {
   headers.append('Authorization', basicAuth);
   headers.append('Content-Type', 'application/json');
   try {
-    console.log(`${URL}${endpoint}`);
     const response = await fetch(`${URL}${endpoint}`, {
       method: method,
       headers: headers,

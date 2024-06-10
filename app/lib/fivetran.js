@@ -11,6 +11,11 @@ export function apiCall (endpoint, apiKey, apiSecret, method='GET', payload={}) 
     .catch(e => console.error(e));
 }
 
+export async function getSchema (connector_id, fivetranApiKey, fivetranApiSecret) {
+  const res = await apiCall(`connectors/${connector_id}/schemas`, fivetranApiKey, fivetranApiSecret);
+  return res.body.data;
+}
+
 export async function getConnectors (group, fivetranApiKey, fivetranApiSecret) {
   const res = await apiCall(`groups/${group.id}/connectors`, fivetranApiKey, fivetranApiSecret);
   return res.body.data.items;
