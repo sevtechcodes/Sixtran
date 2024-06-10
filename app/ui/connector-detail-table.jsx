@@ -38,6 +38,7 @@ export default function ConnectorDetail ({ schema, queries}) {
       const tableData = {
         name: table,
         select_queries: queries.filter(q => q.table_id === table && q.statement_type === 'SELECT').length,
+        merge_queries: queries.filter(q => q.table_id === table && q.statement_type === 'MERGE').length,
         update_queries: queries.filter(q => q.table_id === table && q.statement_type === 'UPDATE').length,
         delete_queries: queries.filter(q => q.table_id === table && q.statement_type === 'DELETE').length,
         inserted: queries.filter(q => q.table_id === table).reduce((acc, q) => acc + q.inserted_rows, 0),
@@ -58,6 +59,11 @@ export default function ConnectorDetail ({ schema, queries}) {
     {
       name: 'SELECT',
       selector: row => row.select_queries,
+      sortable: true
+    },
+    {
+      name: 'MERGE',
+      selector: row => row.merge_queries,
       sortable: true
     },
     {

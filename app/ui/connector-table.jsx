@@ -3,6 +3,7 @@ import DataTable from 'react-data-table-component';
 import { formatDuration, formatDistanceToNow, compareAsc } from 'date-fns';
 import { PauseIcon, PlayIcon, BackwardIcon, AdjustmentsHorizontalIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { roundMinutes } from '../lib/utils';
+import Link from 'next/link';
 
 const SYNC_FREQS = [5, 15, 30, 60, 120, 180, 360, 480, 720, 1440];
 
@@ -39,7 +40,7 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
   const columns = useMemo(() => [
     {
       name: 'Connector ID',
-      selector: row => row.id,
+      selector: row => <Link href={`dashboard/${row.id}`}>{row.id}</Link>,
       sortable: true
     },
     {
