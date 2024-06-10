@@ -64,7 +64,8 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
       name: 'Sync Frequency',
       selector: row => formatDuration(roundMinutes(row.sync_frequency)),
       sortable: true,
-      sortFunction: (a, b) => a.sync_frequency - b.sync_frequency
+      sortFunction: (a, b) => a.sync_frequency - b.sync_frequency,
+      hide: 'md',
     },
     {
       name: 'Sync Status',
@@ -81,7 +82,8 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
         }
       },
       sortable: true,
-      sortFunction: (a, b) => a.status.sync_state.localeCompare(b.status.sync_state)
+      sortFunction: (a, b) => a.status.sync_state.localeCompare(b.status.sync_state),
+      hide: 'md',
     },
     {
       name: 'Last Sync',
@@ -157,10 +159,11 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
             onSelectedRowsChange={handleRowSelected}
             clearSelectedRows={toggledClearRows}
             customStyles={customStyles}
+            pagination
           />
         </div>
       </div>
-      <div className='flex justify-around mt-20'>
+      <div className='flex justify-around mt-5'>
         <button onClick={pauseConnectors}
           className='py-1 px-4 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
         >

@@ -63,7 +63,6 @@ export default function ConnectorDetail ({ schema, queries}) {
       name: 'SELECT',
       selector: row => row.select_queries,
       sortable: true,
-      hide: 'md',
     },
     {
       name: 'MERGE',
