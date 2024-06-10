@@ -45,10 +45,9 @@ export default function Page ({ params }) {
 
   return (
     <>
-      <h1>Connector ID: {id}</h1>
-      
-      <ConnectorDetail schema={schema} queries={queries} />
-
+      <div className='flex flex-col m-10'>
+        <ConnectorDetail schema={schema} queries={queries} />
+      </div>
     </>
   );
 }

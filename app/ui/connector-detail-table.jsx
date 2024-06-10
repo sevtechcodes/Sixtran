@@ -38,6 +38,8 @@ export default function ConnectorDetail ({ schema, queries}) {
       const tableData = {
         name: table,
         select_queries: queries.filter(q => q.table_id === table && q.statement_type === 'SELECT').length,
+        update_queries: queries.filter(q => q.table_id === table && q.statement_type === 'UPDATE').length,
+        delete_queries: queries.filter(q => q.table_id === table && q.statement_type === 'DELETE').length,
         inserted: queries.filter(q => q.table_id === table).reduce((acc, q) => acc + q.inserted_rows, 0),
         updated: queries.filter(q => q.table_id === table).reduce((acc, q) => acc + q.updated_rows, 0),
         deleted: queries.filter(q => q.table_id === table).reduce((acc, q) => acc + q.deleted_rows, 0),
@@ -49,13 +51,23 @@ export default function ConnectorDetail ({ schema, queries}) {
 
   const columns = useMemo(() => [
     {
-      name: 'Table',
+      name: 'Table name',
       selector: row => row.name,
       sortable: true
     },
     {
-      name: 'Number of SELECT queries',
+      name: 'SELECT',
       selector: row => row.select_queries,
+      sortable: true
+    },
+    {
+      name: 'UPDATE',
+      selector: row => row.update_queries,
+      sortable: true
+    },
+    {
+      name: 'DELETE',
+      selector: row => row.delete_queries,
       sortable: true
     },
     {
@@ -95,13 +107,16 @@ export default function ConnectorDetail ({ schema, queries}) {
   return (
     <>
       <div className="p-4">
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="m-4 border border-black rounded text-xl w-1/4 min-h-1 text-lg p-1"
-        />
+        <div className='flex items-center'>
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="m-4 border border-black rounded text-xl w-1/10 min-h-1 text-lg p-1"
+          />
+          <h1 className='font-bold text-lg mr-3 ml-3'>Dataset:</h1><h1 className='bg-[#06AB78] text-white rounded p-1 text-lg font-bold'>{schema.name_in_destination}</h1>
+        </div>
         {data.length > 0 && (
           <div className='border'>
             <DataTable
