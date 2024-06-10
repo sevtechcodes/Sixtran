@@ -41,7 +41,8 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
     {
       name: 'Connector ID',
       selector: row => <Link href={`dashboard/${row.id}`}>{row.id}</Link>,
-      sortable: true
+      sortable: true,
+      sortFunction: (a, b) => b.id.localeCompare(a.id)
     },
     {
       name: 'Source',
@@ -54,12 +55,14 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
           </>
         );
       },
-      sortable: true
+      sortable: true,
+      sortFunction: (a, b) => b.service.localeCompare(a.service)
     },
     {
       name: 'Sync Frequency',
       selector: row => formatDuration(roundMinutes(row.sync_frequency)),
-      sortable: true
+      sortable: true,
+      sortFunction: (a, b) => a.sync_frequency - b.sync_frequency
     },
     {
       name: 'Sync Status',
@@ -75,12 +78,18 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
           return (<div></div>);
         }
       },
-      sortable: true
+      sortable: true,
+      sortFunction: (a, b) => a.status.sync_state.localeCompare(b.status.sync_state)
     },
     {
       name: 'Last Sync',
       selector: row => row.succeeded_at ? formatDistanceToNow(new Date(row.succeeded_at)) : 'Never',
-      sortable: true
+      sortable: true,
+      sortFunction: (a, b) => {
+        if (!a.succeeded_at) return -1;
+        if (!b.succeeded_at) return 1;
+        return compareAsc(new Date(a.succeeded_at), new Date(b.succeeded_at));
+      }
     },
   ], []);
 
