@@ -48,8 +48,12 @@ export default function Page () {
 
   async function handleSelect (event) {
     event.preventDefault();
-    selectedGroup(event.target.value);
+    const group = groups.find(g => g.id === event.target.value);
+    setSelectedGroup(group);
+    setPending(true);
+    const connectorsData = await getConnectors(group, credentials.fivetranApiKey, credentials.fivetranApiSecret);
     setConnectors(connectorsData);
+    setPending(false);
   }
 
   // TODO: refactor these functions:
@@ -115,7 +119,7 @@ export default function Page () {
         <label>Select your connector group: </label>
         {!pending &&
         <select onChange={handleSelect} className='bg-[#06AB78] text-white rounded p-1'>
-          {groups.map( (group) => (<option value={group} key={group.id}>{group.name}</option>))}
+          {groups.map( (group) => (<option value={group.id} key={group.id}>{group.name}</option>))}
         </select> }
       </div>
       <div>
