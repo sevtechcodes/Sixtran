@@ -56,45 +56,53 @@ export default function ConnectorDetail ({ schema, queries}) {
       name: 'Table name',
       selector: row => row.name,
       sortable: true,
-      minWidth: '250px'
+      minWidth: '250px',
+      grow:2
     },
     {
       name: 'SELECT',
       selector: row => row.select_queries,
-      sortable: true
+      sortable: true,
+      hide: 'md',
     },
     {
       name: 'MERGE',
       selector: row => row.merge_queries,
-      sortable: true
+      sortable: true,
+      hide: 'md',
     },
     {
       name: 'UPDATE',
       selector: row => row.update_queries,
-      sortable: true
+      sortable: true,
+      hide: 'md',
     },
     {
       name: 'DELETE',
       selector: row => row.delete_queries,
-      sortable: true
+      sortable: true,
+      hide: 'md',
     },
     {
-      name: 'Inserted rows',
+      name: 'Inserted',
       selector: row => row.inserted,
-      sortable: true
+      sortable: true,
+      hide: 'md',
     },
     {
-      name: 'Updated rows',
+      name: 'Updated',
       selector: row => row.updated,
-      sortable: true
+      sortable: true,
+      hide: 'md',
     },
     {
-      name: 'Deleted rows',
+      name: 'Deleted',
       selector: row => row.deleted,
-      sortable: true
+      sortable: true,
+      hide: 'md',
     },
     {
-      name: 'Estimated MAR',
+      name: 'MAR',
       selector: row => row.mar,
       sortable: true
     },
@@ -131,6 +139,7 @@ export default function ConnectorDetail ({ schema, queries}) {
               columns={columns}
               data={filteredData}
               customStyles={customStyles}
+              pagination
             />
           </div> )}
       </div>

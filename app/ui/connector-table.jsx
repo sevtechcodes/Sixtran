@@ -41,7 +41,7 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
     {
       name: 'Connector ID',
       selector: row => <Link href={`dashboard/${row.id}`}
-        className='hover:underline hover:font-bold hover:bg-[#5C5B61]'
+        className='hover:underline hover:font-bold'
       >{row.id}</Link>,
       sortable: true,
       sortFunction: (a, b) => b.id.localeCompare(a.id)
