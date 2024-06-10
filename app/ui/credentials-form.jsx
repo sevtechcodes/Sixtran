@@ -26,7 +26,6 @@ export default function CredentialsForm () {
     const response = await apiCall('account/info', formData.apiKey, formData.apiSecret);
 
     if (response.status === 200) {
-      setValidCredentials(true);
       setCookie('user',  JSON.stringify({fivetranApiKey: formData.apiKey, fivetranApiSecret: formData.apiSecret}));
       router.push('/dashboard');
     }

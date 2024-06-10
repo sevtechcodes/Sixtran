@@ -13,7 +13,7 @@ export default function Home () {
     <main className='flex flex-col items-center'>
       <div className='pt-40'>
         <h1 className='inline-block text-6xl font-black tracking-[-0.4px]'>Welcome to</h1>
-        <div className='inline-block bg-black m-2 pb-1 px-2 rounded-lg'>
+        <div className='inline-block bg-black ml-2 pb-1 px-2 rounded-lg'>
           <h1 className='text-6xl font-black tracking-[-0.4px] text-white'>Sixtran</h1>
         </div>
       </div>

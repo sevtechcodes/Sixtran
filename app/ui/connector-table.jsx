@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import { formatDuration, formatDistanceToNow, compareAsc } from 'date-fns';
-import { PauseIcon, PlayIcon, BackwardIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
+import { PauseIcon, PlayIcon, BackwardIcon, AdjustmentsHorizontalIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { roundMinutes } from '../lib/utils';
 
 const SYNC_FREQS = [5, 15, 30, 60, 120, 180, 360, 480, 720, 1440];
@@ -10,7 +10,7 @@ const customStyles = {
   rows: {
     style: {
       minHeight: '72px',
-      fontSize: '1rem',
+      fontSize: '16px',
       fontWeight: '500'
     },
   },
@@ -18,7 +18,7 @@ const customStyles = {
     style: {
       paddingLeft: '8px', // override the cell padding for head cells
       paddingRight: '8px',
-      fontSize: '1.5rem',
+      fontSize: '1rem',
       fontWeight: '800'
     },
   },
@@ -30,7 +30,7 @@ const customStyles = {
   },
 };
 
-export default function ConnectorTable ({ data, types, onPause, onUnpause, onFreq, onResync}) {
+export default function ConnectorTable ({ data, types, onPause, onUnpause, onFreq, onResync, onSync}) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
   const [toggledClearRows, setToggleClearRows] = useState(false);
@@ -122,6 +122,11 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
     handleClearRows();
   }
 
+  async function syncConnectors () {
+    onSync(selectedRows);
+    handleClearRows();
+  }
+
   return (
     <>
       <div className="p-4">
@@ -145,25 +150,31 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
       </div>
       <div className='flex justify-around mt-20'>
         <button onClick={pauseConnectors}
-          className='border border-black border-2 px-4 text-2xl rounded-lg bg-black text-white font-bold'
+          className='border border-black border-2 px-4 text-s rounded-lg bg-black text-white font-bold'
         >
-          <PauseIcon className='inline h-8 mx-2'/><span>Pause</span>
+          <PauseIcon className='inline h-6 mx-2'/><span>Pause</span>
         </button>
         <button onClick={unpauseConnectors}
-          className='border border-black border-2 px-4 text-2xl rounded-lg bg-black text-white font-bold'
+          className='border border-black border-2 px-4 text-s rounded-lg bg-black text-white font-bold'
         >
-          <PlayIcon className='inline h-8 mx-2'/><span>Unpause</span>
+          <PlayIcon className='inline h-6 mx-2'/><span>Unpause</span>
         </button>
-        <button onClick={resyncConnectors}
-          className='border border-black border-2 px-4 text-2xl rounded-lg bg-black text-white font-bold'
+        <button onClick={syncConnectors}
+          className='border border-black border-2 px-4 text-s rounded-lg bg-black text-white font-bold'
         >
-          <BackwardIcon className='inline h-8 mx-2'/><span>Historical Sync</span>
+          <ArrowPathIcon className='inline h-6 mx-2'/><span>Sync</span>
+        </button>
+
+        <button onClick={resyncConnectors}
+          className='border border-black border-2 px-4 text-s rounded-lg bg-black text-white font-bold'
+        >
+          <BackwardIcon className='inline h-6 mx-2'/><span>Historical Sync</span>
         </button>
         <form onSubmit={freqConnectors}>
           <button type='submit'
-            className='border border-black border-2 px-4 text-2xl rounded-lg bg-black text-white font-bold'
+            className='border border-black border-2 px-4 text-s rounded-lg bg-black text-white font-bold'
           >
-            <AdjustmentsHorizontalIcon className='inline h-8 mx-2'/><span>Change sync frequency:</span>
+            <AdjustmentsHorizontalIcon className='inline h-6 mx-2'/><span>Sync frequency:</span>
           </button>
           <select value={selectedFrequency} onChange={e => setSelectedFrequency(e.target.value)}
             className='text-xl'

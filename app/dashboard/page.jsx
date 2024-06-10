@@ -2,7 +2,7 @@
 
 import { getCookie } from 'cookies-next';
 import { useEffect, useState, useMemo } from 'react';
-import { apiCall, modifyConnectors, resyncConnectors } from '../lib/fivetran';
+import { apiCall, modifyConnectors, resyncConnectors, syncConnectors } from '../lib/fivetran';
 import ConnectorTable from '../ui/connector-table';
 import { getConnectors } from '../lib/fivetran';
 
@@ -86,12 +86,27 @@ export default function Page () {
     setConnectors(updatedConnectors);
   }
 
-  async function HistResyncConnectors (connectors) {
-    await  resyncConnectors(connectors, credentials.fivetranApiKey, credentials.fivetranApiSecret);
-    const connectorsData = await getConnectors(selectedGroup, credentials.fivetranApiKey, credentials.fivetranApiSecret);
-    setConnectors(connectorsData);
+  async function HistResyncConnectors (connectorsToResync) {
+    await  resyncConnectors(connectorsToResync, credentials.fivetranApiKey, credentials.fivetranApiSecret);
+    const updatedConnectors = connectors.map(connector => {
+      if (connectorsToResync.find(c => c.id === connector.id)) {
+        return { ...connector, status: { ...connector.status, sync_state: 'syncing' } };
+      }
+      return connector;
+    });
+    setConnectors(updatedConnectors);
   }
-  
+
+  async function NormalSyncConnectors (connectorsToSync) {
+    await syncConnectors(connectorsToSync, credentials.fivetranApiKey, credentials.fivetranApiSecret);
+    const updatedConnectors = connectors.map(connector => {
+      if (connectorsToSync.find(c => c.id === connector.id)) {
+        return { ...connector, status: { ...connector.status, sync_state: 'syncing' } };
+      }
+      return connector;
+    });
+    setConnectors(updatedConnectors);
+  }
 
 
   return (
@@ -110,6 +125,7 @@ export default function Page () {
           onUnpause={unpauseConnectors}
           onFreq={freqConnectors}
           onResync={HistResyncConnectors}
+          onSync={NormalSyncConnectors}
         /> } 
       </div>
     </>
