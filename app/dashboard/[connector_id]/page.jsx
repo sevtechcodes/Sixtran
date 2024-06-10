@@ -4,6 +4,7 @@ import { getCookie } from 'cookies-next';
 import { useEffect, useState, useMemo } from 'react';
 import { getSchema } from '@/app/lib/fivetran';
 import { callBigQuery } from '@/app/lib/bigquery';
+import ConnectorDetail from '@/app/ui/connector-detail-table';
 
 
 export default function Page ({ params }) {
@@ -40,15 +41,13 @@ export default function Page ({ params }) {
       }
     }
     getInitialData();
-  }, []);
+  }, [id]);
 
   return (
     <>
       <h1>Connector ID: {id}</h1>
-      <h2>Schema</h2>
-      <pre>{JSON.stringify(schema, null, 2)}</pre>
-      <h2>Queries</h2>
-      <pre>{JSON.stringify(queries, null, 2)}</pre>
+      
+      <ConnectorDetail schema={schema} queries={queries} />
 
     </>
   );
