@@ -6,23 +6,23 @@ import { formatDuration, formatDistanceToNow, compareAsc } from 'date-fns';
 const customStyles = {
   rows: {
     style: {
-      minHeight: '72px',
+      minHeight: '30px',
       fontSize: '16px',
       fontWeight: '500'
     },
   },
   headCells: {
     style: {
-      paddingLeft: '8px', // override the cell padding for head cells
-      paddingRight: '8px',
+      paddingLeft: '1px', // override the cell padding for head cells
+      paddingRight: '1px',
       fontSize: '1rem',
       fontWeight: '800'
     },
   },
   cells: {
     style: {
-      paddingLeft: '8px', // override the cell padding for data cells
-      paddingRight: '8px',
+      paddingLeft: '1px', // override the cell padding for data cells
+      paddingRight: '1px',
     },
   },
 };
@@ -44,17 +44,19 @@ export default function ConnectorDetail ({ schema, queries}) {
         inserted: queries.filter(q => q.table_id === table).reduce((acc, q) => acc + q.inserted_rows, 0),
         updated: queries.filter(q => q.table_id === table).reduce((acc, q) => acc + q.updated_rows, 0),
         deleted: queries.filter(q => q.table_id === table).reduce((acc, q) => acc + q.deleted_rows, 0),
+        mar: queries.filter(q => q.table_id === table).reduce((acc, q) => acc + q.inserted_rows + q.updated_rows + q.deleted_rows, 0)
       };
       data.push(tableData);
     }
-    setData(data);
+    setData(data.sort((a, b) => b.mar - a.mar));
   }, [schema, queries]);
 
   const columns = useMemo(() => [
     {
       name: 'Table name',
       selector: row => row.name,
-      sortable: true
+      sortable: true,
+      minWidth: '250px'
     },
     {
       name: 'SELECT',
@@ -93,7 +95,7 @@ export default function ConnectorDetail ({ schema, queries}) {
     },
     {
       name: 'Estimated MAR',
-      selector: row => row.inserted + row.updated + row.deleted,
+      selector: row => row.mar,
       sortable: true
     },
 
