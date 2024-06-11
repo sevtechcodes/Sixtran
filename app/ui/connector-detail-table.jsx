@@ -177,7 +177,7 @@ export default function ConnectorDetail ({ schema, queries, disable, enable}) {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="m-4 border border-black rounded text-xl w-1/10 min-h-1 text-lg p-1"
           />
-          <h1 className='font-bold text-lg mr-3 ml-3'>Dataset:</h1><h1 className='bg-[#06AB78] text-white rounded p-1 text-lg font-bold'>{schema.name_in_destination}</h1>
+          <h1 className='font-bold text-lg mr-3 ml-3'>Dataset:</h1><h1 className='bg-[#06AB78] text-white rounded px-2 py-1 text-lg font-bold'>{schema.name_in_destination}</h1>
           
         </div>
         {data.length > 0 && (
