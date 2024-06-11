@@ -1,8 +1,9 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import { formatDuration, formatDistanceToNow, compareAsc } from 'date-fns';
-import { CheckCircleIcon, CheckIcon, XCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { CheckCircleIcon, CheckIcon, ClockIcon, XCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
+const TIMEFFRAMES = [1,7,14,30,90,180,365];
 
 const customStyles = {
   rows: {
@@ -30,30 +31,36 @@ const customStyles = {
 
 export default function ConnectorDetail ({ schema, queries, disable, enable}) {
   const [searchTerm, setSearchTerm] = useState('');
+  const [timeframe, setTimeframe] = useState(30);
   const [selectedRows, setSelectedRows] = useState([]);
   const [toggledClearRows, setToggleClearRows] = useState(false);
   const [data, setData] = useState([]);
 
   useEffect(() => {
     const data = [];
+    const now = new Date();
+    const timeFrame = new Date(now.setDate(now.getDate() - timeframe));
+
     for (const table in schema.tables) {
+
+      const filteredQueries = queries.filter(q => q.table_id === table && compareAsc(new Date(q?.creation_time.value), timeFrame ) >= 0);
+
       const tableData = {
         name: table,
         enabled: schema.tables[table].enabled,
-        select_queries: queries.filter(q => q.table_id === table && q.statement_type === 'SELECT').length,
-        merge_queries: queries.filter(q => q.table_id === table && q.statement_type === 'MERGE').length,
-        update_queries: queries.filter(q => q.table_id === table && q.statement_type === 'UPDATE').length,
-        delete_queries: queries.filter(q => q.table_id === table && q.statement_type === 'DELETE').length,
-        inserted: queries.filter(q => q.table_id === table).reduce((acc, q) => acc + q.inserted_rows, 0),
-        updated: queries.filter(q => q.table_id === table).reduce((acc, q) => acc + q.updated_rows, 0),
-        deleted: queries.filter(q => q.table_id === table).reduce((acc, q) => acc + q.deleted_rows, 0),
-        mar: queries.filter(q => q.table_id === table).reduce((acc, q) => acc + q.inserted_rows + q.updated_rows + q.deleted_rows, 0),
         total_rows: queries.filter(q => q.table_id === table).reduce((_, q) => q.total_rows, 0),
+
+        select_queries: filteredQueries.filter(q => q.statement_type === 'SELECT').length,
+        merge_queries: filteredQueries.filter(q => q.statement_type === 'MERGE').length,
+        inserted: filteredQueries.reduce((acc, q) => acc + q.inserted_rows, 0),
+        updated: filteredQueries.reduce((acc, q) => acc + q.updated_rows, 0),
+        deleted: filteredQueries.reduce((acc, q) => acc + q.deleted_rows, 0),
+        mar: filteredQueries.reduce((acc, q) => acc + q.inserted_rows + q.updated_rows + q.deleted_rows, 0),
       };
       data.push(tableData);
     }
     setData(data.sort((a, b) => b.mar - a.mar));
-  }, [schema, queries]);
+  }, [schema, queries, timeframe]);
 
   const columns = useMemo(() => [
     {
@@ -74,18 +81,18 @@ export default function ConnectorDetail ({ schema, queries, disable, enable}) {
       sortable: true,
       hide: 'md',
     },
-    {
-      name: 'UPDATE',
-      selector: row => row.update_queries,
-      sortable: true,
-      hide: 'md',
-    },
-    {
-      name: 'DELETE',
-      selector: row => row.delete_queries,
-      sortable: true,
-      hide: 'md',
-    },
+    // {
+    //   name: 'UPDATE',
+    //   selector: row => row.update_queries,
+    //   sortable: true,
+    //   hide: 'md',
+    // },
+    // {
+    //   name: 'DELETE',
+    //   selector: row => row.delete_queries,
+    //   sortable: true,
+    //   hide: 'md',
+    // },
     {
       name: 'Inserted',
       selector: row => row.inserted,
@@ -123,7 +130,9 @@ export default function ConnectorDetail ({ schema, queries, disable, enable}) {
 
   ], []);
 
-
+  function handleChange (event) {
+    setTimeframe(Number(event.target.value));
+  }
 
   const filteredData = useMemo(() => {
     if (!searchTerm) return data;
@@ -169,6 +178,7 @@ export default function ConnectorDetail ({ schema, queries, disable, enable}) {
             className="m-4 border border-black rounded text-xl w-1/10 min-h-1 text-lg p-1"
           />
           <h1 className='font-bold text-lg mr-3 ml-3'>Dataset:</h1><h1 className='bg-[#06AB78] text-white rounded p-1 text-lg font-bold'>{schema.name_in_destination}</h1>
+          
         </div>
         {data.length > 0 && (
           <div className='border'>
@@ -199,6 +209,20 @@ export default function ConnectorDetail ({ schema, queries, disable, enable}) {
           <CheckCircleIcon className='inline h-6 mx-2'/>
           <span>Enable</span>
         </button>
+        <button className='ml-5 py-1 px-2 text-s rounded-lg bg-white text-black font-bold'>
+          <ClockIcon className='inline h-6 mx-2'/>
+          <span>Select timeframe:</span>
+        </button>
+        <select onChange={handleChange}
+          className='ml-1 py-1.5 px-0 hover:bg-[#5C5B61] hover:text-white bg-black text-white font-bold rounded-lg' 
+        >
+          {TIMEFFRAMES.map((timeframe, index) => {
+            if (timeframe === 30) {
+              return <option key={index} value={timeframe} selected>{formatDuration({days: timeframe})}</option>;
+            } else {
+              return <option key={index} value={timeframe} >{formatDuration({days: timeframe})}</option>;
+            }})}
+        </select>
       </div>
     </>
   );

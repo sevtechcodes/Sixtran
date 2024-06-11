@@ -9,7 +9,18 @@ const bigquery = new BigQuery(options);
 
 async function getQueries (dataset_id) {
   const query = `
-  SELECT b.*, a.total_rows, 
+  SELECT 
+    a.table_schema as dataset_id,
+    a.table_name as table_id, 
+    a.total_rows, 
+
+    b.creation_time,
+    b.job_type,
+    b.statement_type,
+    b.num_references,
+    b.deleted_rows,
+    b.updated_rows,
+    b.inserted_rows,
   from \`sixtran-426005.region-eu\`.INFORMATION_SCHEMA.TABLE_STORAGE as a
   left join (
     SELECT
