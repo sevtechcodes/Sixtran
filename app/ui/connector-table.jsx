@@ -52,7 +52,7 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
         return (
           <>
             {/* TODO: change this to use Image */}
-            <img className='max-h-5 inline mx-3' src={types.filter((type) => type.id === row.service)[0].icons[0]}></img>
+            <img className='max-h-5 inline mx-1' src={types.filter((type) => type.id === row.service)[0].icons[0]}></img>
             <span>{types.filter((type) => type.id === row.service)[0].name}</span>
           </>
         );
@@ -149,7 +149,7 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
           placeholder="Search..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="m-4 border border-black rounded text-xl w-1/4 min-h-1 text-lg p-1"
+          className="my-4 border border-black rounded text-xl w-1/4 min-h-1 text-lg p-1"
         />
         <div className='border'>
           <DataTable
@@ -163,36 +163,41 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
           />
         </div>
       </div>
-      <div className='flex justify-around mt-5'>
+      <div className='flex justify-center mt-5'>
         <button onClick={pauseConnectors}
-          className='py-1 px-4 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
+          className='mx-5 py-1 px-1 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
+          title='Pause selected connectors'
         >
-          <PauseIcon className='inline h-6 mx-2'/><span>Pause</span>
+          <PauseIcon className='inline h-6 mx-2'/>
         </button>
         <button onClick={unpauseConnectors}
-          className='py-1 px-4 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
+          className='mx-5 py-1 px-1 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
+          title='Unpause selected connectors'
         >
-          <PlayIcon className='inline h-6 mx-2'/><span>Unpause</span>
+          <PlayIcon className='inline h-6 mx-2'/>
         </button>
         <button onClick={syncConnectors}
-          className='py-1 px-4 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
+          className='mx-5 py-1 px-1 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
+          title='Sync selected connectors'
         >
-          <ArrowPathIcon className='inline h-6 mx-2'/><span>Sync</span>
+          <ArrowPathIcon className='inline h-6 mx-2'/>
         </button>
 
         <button onClick={resyncConnectors}
-          className='py-1 px-4 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
+          className='mx-5 py-1 px-1 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
+          title='Resync selected connectors'
         >
-          <BackwardIcon className='inline h-6 mx-2'/><span>Historical Sync</span>
+          <BackwardIcon className='inline h-6 mx-2'/>
         </button>
         <form onSubmit={freqConnectors}>
           <button type='submit'
-            className='py-1 px-4 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
+            className='mx-5 py-1 px-1 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
+            title='Change sync frequency for selected connectors'
           >
-            <AdjustmentsHorizontalIcon className='inline h-6 mx-2'/><span>Sync frequency:</span>
+            <AdjustmentsHorizontalIcon className='inline h-6 mx-2'/>
           </button>
           <select value={selectedFrequency} onChange={e => setSelectedFrequency(e.target.value)}
-            className='text-xl'
+            className='text-s'
           >
             {SYNC_FREQS.map(freq => <option key={freq} value={freq}>{formatDuration(roundMinutes(freq))}</option>)}
           </select>

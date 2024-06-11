@@ -115,14 +115,14 @@ export default function Page () {
 
   return (
     <>
-      <div className='m-10 font-bold text-lg items-center'>
+      <div className='mx-12 mt-5 font-bold text-lg items-center'>
         <label>Select your connector group: </label>
         {!pending &&
-        <select onChange={handleSelect} className='bg-[#06AB78] text-white rounded p-1 ml-2'>
+        <select onChange={handleSelect} className='bg-[#06AB78] text-white rounded p-1'>
           {groups.map( (group) => (<option value={group.id} key={group.id}>{group.name}</option>))}
         </select> }
       </div>
-      <div className='m-10'>
+      <div className='mx-9'>
         { !pending && <ConnectorTable data={connectors}
           types={types}
           onPause={pauseConnectors}
