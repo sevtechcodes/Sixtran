@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import { formatDuration, formatDistanceToNow, compareAsc } from 'date-fns';
+import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 
 const customStyles = {
@@ -29,7 +30,8 @@ const customStyles = {
 
 export default function ConnectorDetail ({ schema, queries}) {
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [toggledClearRows, setToggleClearRows] = useState(false);
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -37,6 +39,7 @@ export default function ConnectorDetail ({ schema, queries}) {
     for (const table in schema.tables) {
       const tableData = {
         name: table,
+        enabled: schema.tables[table].enabled,
         select_queries: queries.filter(q => q.table_id === table && q.statement_type === 'SELECT').length,
         merge_queries: queries.filter(q => q.table_id === table && q.statement_type === 'MERGE').length,
         update_queries: queries.filter(q => q.table_id === table && q.statement_type === 'UPDATE').length,
@@ -101,8 +104,13 @@ export default function ConnectorDetail ({ schema, queries}) {
       hide: 'md',
     },
     {
-      name: 'MAR',
+      name: 'Active rows',
       selector: row => row.mar,
+      sortable: true
+    },
+    {
+      name: 'Enabled',
+      selector: row => row.enabled ? <CheckIcon className='inline h-6 mx-2'/> : <XMarkIcon className='inline h-6 mx-2'/>,
       sortable: true
     },
 
@@ -117,6 +125,15 @@ export default function ConnectorDetail ({ schema, queries}) {
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [data, searchTerm]);
+
+  const handleRowSelected = useCallback(state => {
+    setSelectedRows(state.selectedRows);
+  }, []);
+
+  function handleClearRows () {
+    setToggleClearRows(!toggledClearRows);
+    setSelectedRows([]);
+  }
 
 
   return (
@@ -138,6 +155,8 @@ export default function ConnectorDetail ({ schema, queries}) {
               columns={columns}
               data={filteredData}
               customStyles={customStyles}
+              selectableRows
+              onSelectedRowsChange={handleRowSelected}
               pagination
             />
           </div> )}
