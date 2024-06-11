@@ -137,14 +137,14 @@ export default function ConnectorDetail ({ schema, queries, disable, enable}) {
 
   function disableTables (event) {
     event.preventDefault();
-    const tablesToDisable = selectedRows.map(row => row.name);
+    const tablesToDisable = selectedRows.map(row => row.name).reverse();
     disable(tablesToDisable);
     handleClearRows();
   }
 
   function enableTables (event) {
     event.preventDefault();
-    const tablesToEnable = selectedRows.map(row => row.name);
+    const tablesToEnable = selectedRows.map(row => row.name).reverse();
     enable(tablesToEnable);
     handleClearRows();
   }
@@ -178,7 +178,7 @@ export default function ConnectorDetail ({ schema, queries, disable, enable}) {
       </div>
       <div>
         <button onClick={disableTables}
-          className='mx-5 py-1 px-1 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
+          className='mx-5 py-1 px-2 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
           title='Disable selected tables'
         >
           <XCircleIcon className='inline h-6 mx-2'/>
@@ -186,7 +186,7 @@ export default function ConnectorDetail ({ schema, queries, disable, enable}) {
         </button>
 
         <button onClick={enableTables}
-          className='mx-5 py-1 px-1 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
+          className='mx-5 py-1 px-2 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
           title='Enable selected tables'
         >
           <CheckCircleIcon className='inline h-6 mx-2'/>

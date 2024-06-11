@@ -2,7 +2,7 @@
 
 import { getCookie } from 'cookies-next';
 import { useEffect, useState, useMemo } from 'react';
-import { getSchema, modifyTables } from '@/app/lib/fivetran';
+import { getSchema, modifyTable } from '@/app/lib/fivetran';
 import { callBigQuery } from '@/app/lib/bigquery';
 import ConnectorDetail from '@/app/ui/connector-detail-table';
 
@@ -44,21 +44,29 @@ export default function Page ({ params }) {
   }, [id]);
 
   async function disableTables (tablesToModify) {
-    await modifyTables(id, schema.name_in_destination, tablesToModify, { enabled: false }, credentials.fivetranApiKey, credentials.fivetranApiSecret);
-    const updatedSchema = {...schema};
-    tablesToModify.forEach(table => {
-      updatedSchema.tables[table].enabled = false;
-    });
-    setSchema(updatedSchema);
+    for (const table of tablesToModify) {
+      try {
+        await modifyTable(id, schema.name_in_destination, table, { enabled: false }, credentials.fivetranApiKey, credentials.fivetranApiSecret);
+        const updatedSchema = {...schema};
+        updatedSchema.tables[table].enabled = false;
+        setSchema(updatedSchema);
+      } catch (error) {
+        console.error('Error disabling table:', error);
+      }
+    }
   }
 
   async function enableTables (tablesToModify) {
-    await modifyTables(id, schema.name_in_destination, tablesToModify, { enabled: true }, credentials.fivetranApiKey, credentials.fivetranApiSecret);
-    const updatedSchema = {...schema};
-    tablesToModify.forEach(table => {
-      updatedSchema.tables[table].enabled = true;
-    });
-    setSchema(updatedSchema);
+    for (const table of tablesToModify) {
+      try {
+        await modifyTable(id, schema.name_in_destination, table, { enabled: true }, credentials.fivetranApiKey, credentials.fivetranApiSecret);
+        const updatedSchema = {...schema};
+        updatedSchema.tables[table].enabled = true;
+        setSchema(updatedSchema);
+      } catch (error) {
+        console.error('Error disabling table:', error);
+      }
+    }
   }
   
   return (
