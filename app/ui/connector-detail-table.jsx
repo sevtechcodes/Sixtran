@@ -47,7 +47,8 @@ export default function ConnectorDetail ({ schema, queries, disable, enable}) {
         inserted: queries.filter(q => q.table_id === table).reduce((acc, q) => acc + q.inserted_rows, 0),
         updated: queries.filter(q => q.table_id === table).reduce((acc, q) => acc + q.updated_rows, 0),
         deleted: queries.filter(q => q.table_id === table).reduce((acc, q) => acc + q.deleted_rows, 0),
-        mar: queries.filter(q => q.table_id === table).reduce((acc, q) => acc + q.inserted_rows + q.updated_rows + q.deleted_rows, 0)
+        mar: queries.filter(q => q.table_id === table).reduce((acc, q) => acc + q.inserted_rows + q.updated_rows + q.deleted_rows, 0),
+        total_rows: queries.filter(q => q.table_id === table).reduce((_, q) => q.total_rows, 0),
       };
       data.push(tableData);
     }
@@ -107,6 +108,12 @@ export default function ConnectorDetail ({ schema, queries, disable, enable}) {
       name: 'Active',
       selector: row => row.mar,
       sortable: true
+    },
+    {
+      name: 'Total',
+      selector: row => row.total_rows,
+      sortable: true,
+      hide: 'md',
     },
     {
       name: 'Enabled',
