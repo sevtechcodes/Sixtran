@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import { formatDuration, formatDistanceToNow, compareAsc } from 'date-fns';
-import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { CheckCircleIcon, CheckIcon, XCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 
 const customStyles = {
@@ -28,7 +28,7 @@ const customStyles = {
   },
 };
 
-export default function ConnectorDetail ({ schema, queries}) {
+export default function ConnectorDetail ({ schema, queries, disable, enable}) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
   const [toggledClearRows, setToggleClearRows] = useState(false);
@@ -104,7 +104,7 @@ export default function ConnectorDetail ({ schema, queries}) {
       hide: 'md',
     },
     {
-      name: 'Active rows',
+      name: 'Active',
       selector: row => row.mar,
       sortable: true
     },
@@ -135,6 +135,20 @@ export default function ConnectorDetail ({ schema, queries}) {
     setSelectedRows([]);
   }
 
+  function disableTables (event) {
+    event.preventDefault();
+    const tablesToDisable = selectedRows.map(row => row.name);
+    disable(tablesToDisable);
+    handleClearRows();
+  }
+
+  function enableTables (event) {
+    event.preventDefault();
+    const tablesToEnable = selectedRows.map(row => row.name);
+    enable(tablesToEnable);
+    handleClearRows();
+  }
+
 
   return (
     <>
@@ -157,9 +171,27 @@ export default function ConnectorDetail ({ schema, queries}) {
               customStyles={customStyles}
               selectableRows
               onSelectedRowsChange={handleRowSelected}
+              clearSelectedRows={toggledClearRows}
               pagination
             />
           </div> )}
+      </div>
+      <div>
+        <button onClick={disableTables}
+          className='mx-5 py-1 px-1 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
+          title='Disable selected tables'
+        >
+          <XCircleIcon className='inline h-6 mx-2'/>
+          <span>Disable</span>
+        </button>
+
+        <button onClick={enableTables}
+          className='mx-5 py-1 px-1 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
+          title='Enable selected tables'
+        >
+          <CheckCircleIcon className='inline h-6 mx-2'/>
+          <span>Enable</span>
+        </button>
       </div>
     </>
   );

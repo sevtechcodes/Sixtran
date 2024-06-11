@@ -56,3 +56,13 @@ export async function syncConnectors (connectors, fivetranApiKey, fivetranApiSec
     console.error('Error syncing connectors:', error);
   }
 }
+
+export async function modifyTables (connector_id, schema, tableNames, payload, fivetranApiKey, fivetranApiSecret) {
+  try {
+    for (let table of tableNames) {
+      await apiCall(`connectors/${connector_id}/schemas/${schema}/tables/${table}`, fivetranApiKey, fivetranApiSecret, 'PATCH', payload);
+    }
+  } catch (error) {
+    console.error('Error modifying tables:', error);
+  }
+}
