@@ -1,3 +1,3 @@
 export function roundMinutes (minutes) {
-  return {hours: Math.floor(minutes / 60), minutes: minutes % 60}
+  return {hours: Math.floor(minutes / 60), minutes: minutes % 60};
 }
