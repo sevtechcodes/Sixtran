@@ -7,7 +7,7 @@ import {
   InMemoryCache,
 } from '@apollo/experimental-nextjs-app-support';
 
-function makeClient () {
+function makeClient() {
   const httpLink = new HttpLink({
     // this needs to be an absolute url, as relative urls cannot be used in SSR
     uri: 'http://localhost:3000/api/graphql',
@@ -26,7 +26,7 @@ function makeClient () {
   });
 }
 
-export function ApolloWrapper ({ children }) {
+export function ApolloWrapper({ children }) {
   return (
     <ApolloNextAppProvider makeClient={makeClient}>
       {children}
