@@ -5,27 +5,34 @@ import { useRouter } from 'next/navigation';
 import { apiCall } from '../lib/fivetran';
 import { setCookie } from 'cookies-next';
 
+interface FormData {
+  apiKey: string;
+  apiSecret: string;
+}
 
-export default function CredentialsForm () {
-  const [formData, setFormData] = useState({apiKey: '', apiSecret: ''});
+interface ApiResponse {
+  status: number;
+  body: any;
+}
+
+export default function CredentialsForm (): React.ReactElement {
+  const [formData, setFormData] = useState<FormData>({apiKey: '', apiSecret: ''});
   const router = useRouter();
 
-
-
-  function handleChange (event) {
+  function handleChange (event: any): void {
     const {name, value} = event.target;
     setFormData(prevFormData => ({...prevFormData, [name]: value}));
   }
 
-  async function handleSubmit (event) {
+  async function handleSubmit (event: any): Promise<void> {
     event.preventDefault();
     if (formData.apiKey.trim().length === 0 || formData.apiSecret.trim().length === 0) {
       return;
     }
+		
+    const response: ApiResponse | void = await apiCall('account/info', formData.apiKey, formData.apiSecret);
 
-    const response = await apiCall('account/info', formData.apiKey, formData.apiSecret);
-
-    if (response.status === 200) {
+    if (response && 'status' in response && response.status === 200) {
       setCookie('user',  JSON.stringify({fivetranApiKey: formData.apiKey, fivetranApiSecret: formData.apiSecret}));
       router.push('/dashboard');
     }
