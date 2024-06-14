@@ -31,45 +31,76 @@ const customStyles = {
   },
 };
 
-export default function ConnectorTable ({ data, types, onPause, onUnpause, onFreq, onResync, onSync}) {
+// interface LabeledValue {
+//   label: string;
+// }
+ 
+// function printLabel(labeledObj: LabeledValue) {
+//   console.log(labeledObj.label);
+// }
+ 
+// let myObj = { size: 10, label: "Size 10 Object" };
+// printLabel(myObj);
+
+interface Connector {
+  id: string;
+  service: string;
+  sync_frequency: number;
+  status: {
+    sync_state: 'paused' | 'scheduled' | 'syncing';
+  };
+  succeeded_at?: Date;
+}
+
+interface Props {
+  data: Connector[];
+  types: any[]; 
+  onPause: (rows: Connector[]) => Promise<void>;
+  onUnpause: (rows: Connector[]) => Promise<void>;
+  onFreq: (rows: Connector[], frequency: number) => void;
+  onResync: (rows: Connector[]) => void;
+  onSync: (rows: Connector[]) => void;
+}
+
+const ConnectorTable = ({ data, types, onPause, onUnpause, onFreq, onResync, onSync }: Props) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [toggledClearRows, setToggleClearRows] = useState(false);
   const [selectedFrequency, setSelectedFrequency] = useState(SYNC_FREQS[0]);
 
   const columns = useMemo(() => [
     {
       name: 'Connector ID',
-      selector: row => <Link href={`dashboard/${row.id}`}
-        className='hover:underline hover:font-bold'
-      >{row.id}</Link>,
+      selector: (row: Connector) => (
+        <Link href={`dashboard/${row.id}`} passHref>
+          <a className='hover:underline hover:font-bold'>{row.id}</a>
+        </Link>
+      ),
       sortable: true,
-      sortFunction: (a, b) => b.id.localeCompare(a.id)
+      sortFunction: (a: Connector, b: Connector) => b.id.localeCompare(a.id)
     },
     {
       name: 'Source',
-      selector: row => {
-        return (
-          <>
-            {/* TODO: change this to use Image */}
-            <img className='max-h-5 inline mx-1' src={types.filter((type) => type.id === row.service)[0].icons[0]}></img>
-            <span>{types.filter((type) => type.id === row.service)[0].name}</span>
-          </>
-        );
-      },
+      selector: (row: Connector) => (
+        <>
+          {/* TODO: change this to use Image */}
+          <img className='max-h-5 inline mx-1' src={types.filter((type) => type.id === row.service)[0].icons[0]} alt={row.service}></img>
+          <span>{types.filter((type) => type.id === row.service)[0].name}</span>
+        </>
+      ),
       sortable: true,
-      sortFunction: (a, b) => b.service.localeCompare(a.service)
+      sortFunction: (a: Connector, b: Connector) => b.service.localeCompare(a.service)
     },
     {
       name: 'Sync Frequency',
-      selector: row => formatDuration(roundMinutes(row.sync_frequency)),
+      selector: (row: Connector) => formatDuration(roundMinutes(row.sync_frequency)),
       sortable: true,
-      sortFunction: (a, b) => a.sync_frequency - b.sync_frequency,
+      sortFunction: (a: Connector, b: Connector) => a.sync_frequency - b.sync_frequency,
       hide: 'md',
     },
     {
       name: 'Sync Status',
-      selector: row => {
+      selector: (row: Connector) => {
         switch (row.status.sync_state) {
         case 'paused':
           return (<div className='px-3 py-2 rounded-2xl bg-gray-200 text-gray-700'>Paused</div>);
@@ -82,14 +113,14 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
         }
       },
       sortable: true,
-      sortFunction: (a, b) => a.status.sync_state.localeCompare(b.status.sync_state),
+      sortFunction: (a: Connector, b: Connector) => a.status.sync_state.localeCompare(b.status.sync_state),
       hide: 'md',
     },
     {
       name: 'Last Sync',
-      selector: row => row.succeeded_at ? formatDistanceToNow(new Date(row.succeeded_at)) : 'Never',
+      selector: (row: Connector) => row.succeeded_at ? formatDistanceToNow(new Date(row.succeeded_at)) : 'Never',
       sortable: true,
-      sortFunction: (a, b) => {
+      sortFunction: (a: Connector, b: Connector) => {
         if (!a.succeeded_at) return -1;
         if (!b.succeeded_at) return 1;
         return compareAsc(new Date(a.succeeded_at), new Date(b.succeeded_at));
@@ -125,7 +156,7 @@ export default function ConnectorTable ({ data, types, onPause, onUnpause, onFre
     handleClearRows();
   }
 
-  async function freqConnectors (event) {
+  async function freqConnectors (event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     onFreq(selectedRows, selectedFrequency);
     handleClearRows();
