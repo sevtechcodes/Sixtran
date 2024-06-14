@@ -3,9 +3,35 @@ import DataTable from 'react-data-table-component';
 import { formatDuration, formatDistanceToNow, compareAsc } from 'date-fns';
 import { CheckCircleIcon, CheckIcon, ClockIcon, XCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
-const TIMEFFRAMES = [1,7,14,30,90,180,365];
+const TIMEFFRAMES:number[]= [1,7,14,30,90,180,365];
 
-const customStyles = {
+type CustomStyles = {
+  rows: {
+    style: {
+      minHeight: string;
+      fontSize: string;
+      fontWeight: string;
+    }
+  }
+  headCells: {
+    style: {
+      paddingLeft: string;
+      paddingRight: string;
+      fontSize: string;
+      fontWeight: string;
+    },
+  },
+  cells: {
+    style: {
+      paddingLeft: string;
+      paddingRight: string;
+    },
+  },
+
+}
+
+
+const customStyles: CustomStyles = {
   rows: {
     style: {
       minHeight: '30px',
@@ -13,6 +39,7 @@ const customStyles = {
       fontWeight: '500'
     },
   },
+
   headCells: {
     style: {
       paddingLeft: '1px', // override the cell padding for head cells
@@ -137,7 +164,7 @@ export default function ConnectorDetail ({ schema, queries, disable, enable}) {
   const filteredData = useMemo(() => {
     if (!searchTerm) return data;
     return data.filter(
-      item => 
+      item =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [data, searchTerm]);
@@ -178,7 +205,7 @@ export default function ConnectorDetail ({ schema, queries, disable, enable}) {
             className="m-4 border border-black rounded text-xl w-1/10 min-h-1 text-lg p-1"
           />
           <h1 className='font-bold text-lg mr-3 ml-3'>Dataset:</h1><h1 className='bg-[#06AB78] text-white rounded px-2 py-1 text-lg font-bold'>{schema.name_in_destination}</h1>
-          
+
         </div>
         {data.length > 0 && (
           <div className='border'>
@@ -214,7 +241,7 @@ export default function ConnectorDetail ({ schema, queries, disable, enable}) {
           <span>Select timeframe:</span>
         </button>
         <select onChange={handleChange}
-          className='ml-1 py-1.5 px-0 hover:bg-[#5C5B61] hover:text-white bg-black text-white font-bold rounded-lg' 
+          className='ml-1 py-1.5 px-0 hover:bg-[#5C5B61] hover:text-white bg-black text-white font-bold rounded-lg'
         >
           {TIMEFFRAMES.map((timeframe, index) => {
             if (timeframe === 30) {
