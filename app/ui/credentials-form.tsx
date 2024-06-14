@@ -1,6 +1,5 @@
 'use client';
-
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { apiCall } from '../lib/fivetran';
 import { setCookie } from 'cookies-next';
@@ -19,12 +18,12 @@ export default function CredentialsForm (): React.ReactElement {
   const [formData, setFormData] = useState<FormData>({apiKey: '', apiSecret: ''});
   const router = useRouter();
 
-  function handleChange (event: any): void {
+  function handleChange (event: React.ChangeEvent<HTMLInputElement>): void {
     const {name, value} = event.target;
     setFormData(prevFormData => ({...prevFormData, [name]: value}));
   }
 
-  async function handleSubmit (event: any): Promise<void> {
+  async function handleSubmit (event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     if (formData.apiKey.trim().length === 0 || formData.apiSecret.trim().length === 0) {
       return;
@@ -36,7 +35,6 @@ export default function CredentialsForm (): React.ReactElement {
       setCookie('user',  JSON.stringify({fivetranApiKey: formData.apiKey, fivetranApiSecret: formData.apiSecret}));
       router.push('/dashboard');
     }
-
   }
 
   return (
