@@ -9,10 +9,10 @@ const bigquery = new BigQuery(options);
 
 async function getQueries (dataset_id) {
   const query = `
-  SELECT 
+  SELECT
     a.table_schema as dataset_id,
-    a.table_name as table_id, 
-    a.total_rows, 
+    a.table_name as table_id,
+    a.total_rows,
 
     b.creation_time,
     b.job_type,
@@ -35,11 +35,11 @@ async function getQueries (dataset_id) {
     IFNULL(SUM(dml_statistics.inserted_row_count), 0) inserted_rows,
     FROM
     \`sixtran-426005.region-eu\`.INFORMATION_SCHEMA.JOBS, UNNEST(referenced_tables) AS t
-    where t.dataset_id = @dataset_id 
+    where t.dataset_id = @dataset_id
     and t.table_id != 'INFORMATION_SCHEMA.TABLES'
     GROUP BY 1,2,3,4,5) as b
     on a.table_schema = b.dataset_id and a.table_name = b.table_id
-  where a.table_schema = @dataset_id 
+  where a.table_schema = @dataset_id
 `;
 
   const options = {

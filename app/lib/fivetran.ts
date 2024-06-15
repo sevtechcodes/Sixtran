@@ -1,19 +1,35 @@
 
-export function apiCall (endpoint, apiKey, apiSecret, method='GET', payload={}) {
-  return fetch(`/api/fivetran?method=${method}&endpoint=${endpoint}&apiKey=${apiKey}&apiSecret=${apiSecret}`,
-    {
-      method: 'POST',
-      body: JSON.stringify(payload),
-      headers: { 'Content-Type': 'application/json'}
-    }
-  )
-    .then(r =>  r.json().then(data => ({status: r.status, body: data})))
-    .catch(e => console.error(e));
+interface ApiCallInterface{
+  status: number;
+  body: any;
 }
 
-export async function getSchema (connector_id, fivetranApiKey, fivetranApiSecret) {
+
+export async function apiCall (endpoint: any, apiKey: any, apiSecret: any, method?: string, payload?: {}): Promise<ApiCallInterface > {
+  try {
+    const response = await fetch(`/api/fivetran?method=${method}&endpoint=${endpoint}&apiKey=${apiKey}&apiSecret=${apiSecret}`,
+      {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json'}
+      }
+    );
+    const apiResponse = await response.json();
+    return {status: response.status, body: apiResponse};
+
+  } catch (error) {
+    console.error('API call error', error);
+    throw new Error('Cannot calculate the square root of a negative number.');
+  }
+
+
+}
+
+export async function getSchema (connector_id: string, fivetranApiKey: string, fivetranApiSecret: string): Promise<any> {
   const res = await apiCall(`connectors/${connector_id}/schemas`, fivetranApiKey, fivetranApiSecret);
-  return res.body.data;
+  if (res.body) {
+    return res.body.data;
+  }
 }
 
 export async function getConnectors (group, fivetranApiKey, fivetranApiSecret) {
