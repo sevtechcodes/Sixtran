@@ -61,14 +61,14 @@ export default function Page (): React.ReactElement {
           try {
             // Get types
             let response: ApiResponse<Type[]>  | void  = await apiCall('metadata/connector-types?limit=1000', fivetranApiKey, fivetranApiSecret);
-						 if (response && response.body) { //Added to make sure response and the response body are available
+						 if (response && response.body && response.body.data && response.body.data.items) { //Added to make sure response and the response body are available
 							 const typesData = response.body.data.items;
 							 setTypes(typesData);
 						 }
 
             // Get groups
             response = await apiCall('groups', fivetranApiKey, fivetranApiSecret);
-						 if (response && response.body) { //Added to make sure response and the response body are available
+						 if (response && response.body && response.body.data && response.body.data.items) { //Added to make sure response and the response body are available
 							 const groupsData = response.body.data.items;
 							 setGroups(groupsData);
 							 setSelectedGroup(groupsData[0]);

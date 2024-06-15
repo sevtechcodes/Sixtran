@@ -252,3 +252,5 @@ const ConnectorTable = ({ data, types, onPause, onUnpause, onFreq, onResync, onS
     </>
   );
 };
+
+export default ConnectorTable;

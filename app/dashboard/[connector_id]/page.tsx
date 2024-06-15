@@ -17,10 +17,15 @@ type Credential = {
 export type FiveTranMetaData = {
 enabled: boolean;
 name_in_destination: string;
+schemas: any; 
 tables: any;
 }
 
-export default function Page ({ params }) {
+interface PagaProps {
+  params: any
+}
+
+export default function Page ({ params }: PagaProps) {
   console.log('PAGE');
   const id = params.connector_id;
   const [credentials, setCredentials] = useState<Credential | null>(null);
