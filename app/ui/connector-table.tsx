@@ -1,9 +1,10 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import DataTable from 'react-data-table-component';
+import DataTable, {Media} from 'react-data-table-component';
 import { formatDuration, formatDistanceToNow, compareAsc } from 'date-fns';
 import { PauseIcon, PlayIcon, BackwardIcon, AdjustmentsHorizontalIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
 import { roundMinutes } from '../lib/utils';
 import Link from 'next/link';
+import { Primitive } from 'react-data-table-component/dist/DataTable/types';
 
 const SYNC_FREQS = [5, 15, 30, 60, 120, 180, 360, 480, 720, 1440];
 
@@ -68,65 +69,79 @@ const ConnectorTable = ({ data, types, onPause, onUnpause, onFreq, onResync, onS
   const [toggledClearRows, setToggleClearRows] = useState(false);
   const [selectedFrequency, setSelectedFrequency] = useState(SYNC_FREQS[0]);
 
-  const columns = useMemo(() => [
-    {
-      name: 'Connector ID',
-      selector: (row: Connector) => (
-        <Link href={`dashboard/${row.id}`} passHref>
-          <a className='hover:underline hover:font-bold'>{row.id}</a>
-        </Link>
-      ),
-      sortable: true,
-      sortFunction: (a: Connector, b: Connector) => b.id.localeCompare(a.id)
-    },
-    {
-      name: 'Source',
-      selector: (row: Connector) => (
-        <>
-          {/* TODO: change this to use Image */}
-          <img className='max-h-5 inline mx-1' src={types.filter((type) => type.id === row.service)[0].icons[0]} alt={row.service}></img>
-          <span>{types.filter((type) => type.id === row.service)[0].name}</span>
-        </>
-      ),
-      sortable: true,
-      sortFunction: (a: Connector, b: Connector) => b.service.localeCompare(a.service)
-    },
-    {
-      name: 'Sync Frequency',
-      selector: (row: Connector) => formatDuration(roundMinutes(row.sync_frequency)),
-      sortable: true,
-      sortFunction: (a: Connector, b: Connector) => a.sync_frequency - b.sync_frequency,
-      hide: 'md',
-    },
-    {
-      name: 'Sync Status',
-      selector: (row: Connector) => {
-        switch (row.status.sync_state) {
-        case 'paused':
-          return (<div className='px-3 py-2 rounded-2xl bg-gray-200 text-gray-700'>Paused</div>);
-        case 'scheduled':
-          return (<div className='px-3 py-2 rounded-2xl bg-rose-50 text-rose-700'>Scheduled</div>);
-        case 'syncing':
-          return (<div className='px-3 py-2 rounded-2xl bg-green-200 text-green-700'>Syncing</div>);
-        default:
-          return (<div></div>);
-        }
-      },
-      sortable: true,
-      sortFunction: (a: Connector, b: Connector) => a.status.sync_state.localeCompare(b.status.sync_state),
-      hide: 'md',
-    },
-    {
-      name: 'Last Sync',
-      selector: (row: Connector) => row.succeeded_at ? formatDistanceToNow(new Date(row.succeeded_at)) : 'Never',
-      sortable: true,
-      sortFunction: (a: Connector, b: Connector) => {
-        if (!a.succeeded_at) return -1;
-        if (!b.succeeded_at) return 1;
-        return compareAsc(new Date(a.succeeded_at), new Date(b.succeeded_at));
-      }
-    },
-  ], []);
+  const columns = useMemo<{
+    name: string;
+   // selector: (row: Row) => string | number | React.JSX.Element;
+    selector: (row: Connector) => Primitive;
+    sortable: boolean;
+    sortFunction?: any;
+    grow?: number;
+    hide?: Media | undefined;
+      }[]>(() => [
+        {
+          name: 'Connector ID',
+          // below: not intended by npm creators to use HTML elements but seems to work.
+          // @ts-ignore
+          selector: (row: Connector) => (
+            <Link href={`dashboard/${row.id}`} passHref>
+              <a className='hover:underline hover:font-bold'>{row.id}</a>
+            </Link>
+          ),
+          sortable: true,
+          sortFunction: (a: Connector, b: Connector) => b.id.localeCompare(a.id)
+        },
+        {
+          name: 'Source',
+          // below: not intended by npm creators to use HTML elements but seems to work.
+          // @ts-ignore
+          selector: (row: Connector) => (
+            <>
+              {/* TODO: change this to use Image */}
+              <img className='max-h-5 inline mx-1' src={types.filter((type) => type.id === row.service)[0].icons[0]} alt={row.service}></img>
+              <span>{types.filter((type) => type.id === row.service)[0].name}</span>
+            </>
+          ),
+          sortable: true,
+          sortFunction: (a: Connector, b: Connector) => b.service.localeCompare(a.service)
+        },
+        {
+          name: 'Sync Frequency',
+          selector: (row: Connector) => formatDuration(roundMinutes(row.sync_frequency)),
+          sortable: true,
+          sortFunction: (a: Connector, b: Connector) => a.sync_frequency - b.sync_frequency,
+          hide: 'md' as Media,
+        },
+        {
+          name: 'Sync Status',
+          // below: not intended by npm creators to use HTML elements but seems to work.
+          // @ts-ignore
+          selector: (row: Connector) => {
+            switch (row.status.sync_state) {
+            case 'paused':
+              return (<div className='px-3 py-2 rounded-2xl bg-gray-200 text-gray-700'>Paused</div>);
+            case 'scheduled':
+              return (<div className='px-3 py-2 rounded-2xl bg-rose-50 text-rose-700'>Scheduled</div>);
+            case 'syncing':
+              return (<div className='px-3 py-2 rounded-2xl bg-green-200 text-green-700'>Syncing</div>);
+            default:
+              return (<div></div>);
+            }
+          },
+          sortable: true,
+          sortFunction: (a: Connector, b: Connector) => a.status.sync_state.localeCompare(b.status.sync_state),
+          hide: 'md' as Media,
+        },
+        {
+          name: 'Last Sync',
+          selector: (row: Connector) => row.succeeded_at ? formatDistanceToNow(new Date(row.succeeded_at)) : 'Never',
+          sortable: true,
+          sortFunction: (a: Connector, b: Connector) => {
+            if (!a.succeeded_at) return -1;
+            if (!b.succeeded_at) return 1;
+            return compareAsc(new Date(a.succeeded_at), new Date(b.succeeded_at));
+          }
+        },
+      ], []);
 
   const filteredData = useMemo(() => {
     if (!searchTerm) return data;
@@ -227,7 +242,7 @@ const ConnectorTable = ({ data, types, onPause, onUnpause, onFreq, onResync, onS
           >
             <AdjustmentsHorizontalIcon className='inline h-6 mx-2'/>
           </button>
-          <select value={selectedFrequency} onChange={e => setSelectedFrequency(e.target.value)}
+          <select value={selectedFrequency} onChange={e => setSelectedFrequency(parseInt(e.target.value))}
             className='text-s'
           >
             {SYNC_FREQS.map(freq => <option key={freq} value={freq}>{formatDuration(roundMinutes(freq))}</option>)}
