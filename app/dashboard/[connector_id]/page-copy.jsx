@@ -14,7 +14,7 @@ export default function Page ({ params }) {
   const [queries, setQueries] = useState([]);
   const [loaded, setLoaded] = useState(false);
 
-  
+
 
   useEffect(() => {
     const {fivetranApiKey, fivetranApiSecret} = JSON.parse(getCookie('user'));
@@ -68,7 +68,7 @@ export default function Page ({ params }) {
       }
     }
   }
-  
+
   return (
     <>
       <div className='flex flex-col m-10'>

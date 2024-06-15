@@ -3,7 +3,7 @@ import DataTable, { Media } from 'react-data-table-component';
 import { formatDuration, formatDistanceToNow, compareAsc } from 'date-fns';
 import { CheckCircleIcon, CheckIcon, ClockIcon, XCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Primitive } from 'react-data-table-component/dist/DataTable/types';
-
+import {FiveTranMetaData} from '../dashboard/[connector_id]/page';
 const TIMEFFRAMES:number[]= [1,7,14,30,90,180,365];
 
 // type CustomStyles = {
@@ -58,7 +58,7 @@ const customStyles = {
 };
 
 interface ConnectorDetailProps {
-  schema: any;
+  schema: FiveTranMetaData;
   queries: any;
   disable: any;
   enable: any;
