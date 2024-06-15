@@ -1,37 +1,38 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import DataTable from 'react-data-table-component';
+import DataTable, { Media } from 'react-data-table-component';
 import { formatDuration, formatDistanceToNow, compareAsc } from 'date-fns';
 import { CheckCircleIcon, CheckIcon, ClockIcon, XCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Primitive } from 'react-data-table-component/dist/DataTable/types';
 
 const TIMEFFRAMES:number[]= [1,7,14,30,90,180,365];
 
-type CustomStyles = {
-  rows: {
-    style: {
-      minHeight: string;
-      fontSize: string;
-      fontWeight: string;
-    }
-  }
-  headCells: {
-    style: {
-      paddingLeft: string;
-      paddingRight: string;
-      fontSize: string;
-      fontWeight: string;
-    },
-  },
-  cells: {
-    style: {
-      paddingLeft: string;
-      paddingRight: string;
-    },
-  },
+// type CustomStyles = {
+//   rows: {
+//     style: {
+//       minHeight: string;
+//       fontSize: string;
+//       fontWeight: string;
+//     }
+//   }
+//   headCells: {
+//     style: {
+//       paddingLeft: string;
+//       paddingRight: string;
+//       fontSize: string;
+//       fontWeight: string;
+//     },
+//   },
+//   cells: {
+//     style: {
+//       paddingLeft: string;
+//       paddingRight: string;
+//     },
+//   },
 
-}
+// }
 
 
-const customStyles: CustomStyles = {
+const customStyles = {
   rows: {
     style: {
       minHeight: '30px',
@@ -56,23 +57,47 @@ const customStyles: CustomStyles = {
   },
 };
 
-export default function ConnectorDetail ({ schema, queries, disable, enable}) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [timeframe, setTimeframe] = useState(30);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [toggledClearRows, setToggleClearRows] = useState(false);
-  const [data, setData] = useState([]);
+interface ConnectorDetailProps {
+  schema: any;
+  queries: any;
+  disable: any;
+  enable: any;
+}
+
+interface Table {
+  name: string;
+  enabled: boolean;
+  total_rows: number;
+  select_queries: number;
+  merge_queries: number;
+  inserted: number;
+  updated: number;
+  deleted: number
+  mar: number;
+}
+
+export default function ConnectorDetail ({ schema, queries, disable, enable}: ConnectorDetailProps): React.ReactElement {
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [timeframe, setTimeframe] = useState <number>(30);
+  const [selectedRows, setSelectedRows] = useState([]); //TODO
+  const [toggledClearRows, setToggleClearRows] = useState<boolean>(false);
+  const [data, setData] = useState<any>([]); //TODO what is the data?
 
   useEffect(() => {
-    const data = [];
-    const now = new Date();
-    const timeFrame = new Date(now.setDate(now.getDate() - timeframe));
+    const data: Table[] = [];
+
+    const now: Date = new Date();
+    const timeFrame: Date = new Date(now.setDate(now.getDate() - timeframe));
 
     for (const table in schema.tables) {
 
       const filteredQueries = queries.filter(q => q.table_id === table && compareAsc(new Date(q?.creation_time.value), timeFrame ) >= 0);
 
-      const tableData = {
+
+
+
+
+      const tableData: Table = {
         name: table,
         enabled: schema.tables[table].enabled,
         total_rows: queries.filter(q => q.table_id === table).reduce((_, q) => q.total_rows, 0),
@@ -89,75 +114,98 @@ export default function ConnectorDetail ({ schema, queries, disable, enable}) {
     setData(data.sort((a, b) => b.mar - a.mar));
   }, [schema, queries, timeframe]);
 
-  const columns = useMemo(() => [
-    {
-      name: 'Table name',
-      selector: row => row.name,
-      sortable: true,
-      minWidth: '250px',
-      grow:2
-    },
-    {
-      name: 'SELECT',
-      selector: row => row.select_queries,
-      sortable: true,
-    },
-    {
-      name: 'MERGE',
-      selector: row => row.merge_queries,
-      sortable: true,
-      hide: 'md',
-    },
-    // {
-    //   name: 'UPDATE',
-    //   selector: row => row.update_queries,
-    //   sortable: true,
-    //   hide: 'md',
-    // },
-    // {
-    //   name: 'DELETE',
-    //   selector: row => row.delete_queries,
-    //   sortable: true,
-    //   hide: 'md',
-    // },
-    {
-      name: 'Inserted',
-      selector: row => row.inserted,
-      sortable: true,
-      hide: 'md',
-    },
-    {
-      name: 'Updated',
-      selector: row => row.updated,
-      sortable: true,
-      hide: 'md',
-    },
-    {
-      name: 'Deleted',
-      selector: row => row.deleted,
-      sortable: true,
-      hide: 'md',
-    },
-    {
-      name: 'Active',
-      selector: row => row.mar,
-      sortable: true
-    },
-    {
-      name: 'Total',
-      selector: row => row.total_rows,
-      sortable: true,
-      hide: 'md',
-    },
-    {
-      name: 'Enabled',
-      selector: row => row.enabled ? <CheckIcon className='inline h-6 mx-2'/> : <XMarkIcon className='inline h-6 mx-2'/>,
-      sortable: true
-    },
 
-  ], []);
+  interface Row {
+    name: string;
+    select_queries: number;
+    merge_queries: number;
+    inserted: number;
+    updated: number;
+    deleted: number;
+    mar: number;
+    total_rows: number;
+    enabled: boolean;
+  }
 
-  function handleChange (event) {
+  const columns = useMemo<{
+    name: string;
+   // selector: (row: Row) => string | number | React.JSX.Element;
+    selector: (row: Row) =>Primitive;
+    sortable: boolean;
+    minWidth?: string;
+    grow?: number;
+    hide?: Media | undefined;
+      }[]>(() => [
+        {
+          name: 'Table name',
+          selector: (row: Row) => row.name,
+          sortable: true,
+          minWidth: '250px',
+          grow:2
+        },
+        {
+          name: 'SELECT',
+          selector: (row: Row) => row.select_queries,
+          sortable: true,
+        },
+        {
+          name: 'MERGE',
+          selector: (row: Row) => row.merge_queries,
+          sortable: true,
+          hide: 'md' as Media,//go from Tailwind to CSS ClassName
+        },
+        // {
+        //   name: 'UPDATE',
+        //   selector: row => row.update_queries,
+        //   sortable: true,
+        //   hide: 'md' as Media,
+        // },
+        // {
+        //   name: 'DELETE',
+        //   selector: row => row.delete_queries,
+        //   sortable: true,
+        //   hide: 'md' as Media,
+        // },
+        {
+          name: 'Inserted',
+          selector: (row: Row) => row.inserted,
+          sortable: true,
+          hide: 'md' as Media,
+        },
+        {
+          name: 'Updated',
+          selector: (row: Row) => row.updated,
+          sortable: true,
+          hide: 'md' as Media,
+        },
+        {
+          name: 'Deleted',
+          selector: (row: Row) => row.deleted,
+          sortable: true,
+          hide: 'md' as Media,
+        },
+        {
+          name: 'Active',
+          selector: (row: Row) => row.mar,
+          sortable: true
+        },
+        {
+          name: 'Total',
+          selector: (row: Row) => row.total_rows,
+          sortable: true,
+          hide: 'md' as Media,
+        },
+        {
+          name: 'Enabled',
+          // below: not intended by npm creators to use HTML elements but seems to work.
+          // @ts-ignore
+          selector: (row: Row) => row.enabled ? <CheckIcon className='inline h-6 mx-2'/> : <XMarkIcon className='inline h-6 mx-2'/>,
+          sortable: true
+        },
+
+      ], []);
+
+  function handleChange (event: React.ChangeEvent<HTMLSelectElement>) {
     setTimeframe(Number(event.target.value));
   }
 
@@ -178,16 +226,16 @@ export default function ConnectorDetail ({ schema, queries, disable, enable}) {
     setSelectedRows([]);
   }
 
-  function disableTables (event) {
+  function disableTables (event:React.MouseEvent<HTMLButtonElement> ) {
     event.preventDefault();
-    const tablesToDisable = selectedRows.map(row => row.name).reverse();
+    const tablesToDisable:string[] = selectedRows.map((row:Row) => row.name).reverse();
     disable(tablesToDisable);
     handleClearRows();
   }
 
-  function enableTables (event) {
+  function enableTables (event:React.MouseEvent<HTMLButtonElement> ) {
     event.preventDefault();
-    const tablesToEnable = selectedRows.map(row => row.name).reverse();
+    const tablesToEnable:string[] = selectedRows.map((row:Row)=> row.name).reverse();
     enable(tablesToEnable);
     handleClearRows();
   }
