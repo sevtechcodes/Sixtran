@@ -1,5 +1,6 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
+import React, { ReactNode } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -8,7 +9,11 @@ export const metadata = {
   description: 'Make Fivetran easier and cheaper.',
 };
 
-export default function RootLayout ({ children }) {
+interface RootLayoutProps {
+  children: ReactNode;
+}
+
+export default function RootLayout ({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>{children}</body>
