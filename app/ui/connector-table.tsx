@@ -108,8 +108,11 @@ const ConnectorTable = ({
         // below: not intended by npm creators to use HTML elements but seems to work.
         // @ts-ignore
         selector: (row: Connector) => (
-          <Link href={`dashboard/${row.id}`} passHref>
-            <a className='hover:underline hover:font-bold'>{row.id}</a>
+          <Link
+            href={`dashboard/${row.id}`}
+            passHref
+            className='hover:underline hover:font-bold'>
+            {row.id}
           </Link>
         ),
         sortable: true,
