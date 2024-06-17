@@ -3,7 +3,7 @@
 import { getCookie } from 'cookies-next';
 import { useEffect, useState, useMemo } from 'react';
 // import { getSchema, modifyTable } from '@/app/lib/fivetran';
-import {getSchema, modifyTable} from '../../lib/fivetran';
+import { getSchema, modifyTable } from '../../lib/fivetran';
 // import { callBigQuery } from '@/app/lib/bigquery';
 import { callBigQuery } from '../../lib/bigquery';
 // import ConnectorDetail from '@/app/ui/connector-detail-table';
@@ -15,32 +15,31 @@ type Credential = {
 };
 
 export type FiveTranMetaData = {
-enabled: boolean;
-name_in_destination: string;
-schemas: any; 
-tables: any;
-}
+  enabled: boolean;
+  name_in_destination: string;
+  schemas: any;
+  tables: any;
+};
 
 interface PagaProps {
-  params: any
+  params: any;
 }
 
-export default function Page ({ params }: PagaProps) {
-  console.log('PAGE');
+export default function Page({ params }: PagaProps) {
   const id = params.connector_id;
   const [credentials, setCredentials] = useState<Credential | null>(null);
-  const [schema, setSchema] = useState <FiveTranMetaData | null>(null);
+  const [schema, setSchema] = useState<FiveTranMetaData | null>(null);
   const [queries, setQueries] = useState([]);
   const [loaded, setLoaded] = useState<boolean>(false);
 
-
-
   useEffect(() => {
     console.log('from use effect');
-    const {fivetranApiKey, fivetranApiSecret} = JSON.parse(getCookie('user') as string);
-    setCredentials({fivetranApiKey, fivetranApiSecret});
+    const { fivetranApiKey, fivetranApiSecret } = JSON.parse(
+      getCookie('user') as string
+    );
+    setCredentials({ fivetranApiKey, fivetranApiSecret });
 
-    async function getInitialData () {
+    async function getInitialData() {
       if (!fivetranApiKey || !fivetranApiSecret) {
         return;
       }
@@ -48,17 +47,15 @@ export default function Page ({ params }: PagaProps) {
         // get schema
         let res = await getSchema(id, fivetranApiKey, fivetranApiSecret);
         const schema = res;
-        console.log('RES',res);
 
-        const name:string = Object.keys(schema.schemas)[0];
-        console.log('NAME', name);
+        const name: string = Object.keys(schema.schemas)[0];
+
         setSchema(schema.schemas[name]);
         // get queries for the dataset
         res = await callBigQuery(name);
         setQueries(JSON.parse(res.body));
         // get size of each table in dataset
         setLoaded(true);
-
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -66,14 +63,21 @@ export default function Page ({ params }: PagaProps) {
     getInitialData();
   }, [id]);
 
-  async function disableTables (tablesToModify) {
+  async function disableTables(tablesToModify) {
     for (const table of tablesToModify) {
       try {
         if (credentials === null || schema === null) {
           throw console.error();
         }
-        await modifyTable(id, schema.name_in_destination, table, { enabled: false }, credentials.fivetranApiKey, credentials.fivetranApiSecret);
-        const updatedSchema = {...schema};
+        await modifyTable(
+          id,
+          schema.name_in_destination,
+          table,
+          { enabled: false },
+          credentials.fivetranApiKey,
+          credentials.fivetranApiSecret
+        );
+        const updatedSchema = { ...schema };
         updatedSchema.tables[table].enabled = false;
         setSchema(updatedSchema);
       } catch (error) {
@@ -82,15 +86,22 @@ export default function Page ({ params }: PagaProps) {
     }
   }
 
-  async function enableTables (tablesToModify) {
+  async function enableTables(tablesToModify) {
     for (const table of tablesToModify) {
       try {
         if (credentials === null || schema === null) {
           throw console.error();
         }
 
-        await modifyTable(id, schema.name_in_destination, table, { enabled: true }, credentials.fivetranApiKey, credentials.fivetranApiSecret);
-        const updatedSchema = {...schema};
+        await modifyTable(
+          id,
+          schema.name_in_destination,
+          table,
+          { enabled: true },
+          credentials.fivetranApiKey,
+          credentials.fivetranApiSecret
+        );
+        const updatedSchema = { ...schema };
         updatedSchema.tables[table].enabled = true;
         setSchema(updatedSchema);
       } catch (error) {
@@ -99,15 +110,18 @@ export default function Page ({ params }: PagaProps) {
     }
   }
 
-
-  return schema === null ? console.error('failed to fetch Fivetran Metadata') :
-    (
-
-      <>
-        <div className='flex flex-col m-10'>
-
-          <ConnectorDetail schema={schema} queries={queries} disable={disableTables} enable={enableTables}/>
-        </div>
-      </>
-    );
+  return schema === null ? (
+    console.error('failed to fetch Fivetran Metadata')
+  ) : (
+    <>
+      <div className='flex flex-col m-10'>
+        <ConnectorDetail
+          schema={schema}
+          queries={queries}
+          disable={disableTables}
+          enable={enableTables}
+        />
+      </div>
+    </>
+  );
 }

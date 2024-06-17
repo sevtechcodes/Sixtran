@@ -13,7 +13,7 @@ export default async function handler(req, res) {
       headers: headers,
       body: method === 'GET' ? undefined : JSON.stringify(req.body),
     });
-    console.log('response', response);
+
     const data = await response.json();
     res.status(response.status).json(data);
   } catch (error) {

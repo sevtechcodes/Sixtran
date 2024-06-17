@@ -35,7 +35,8 @@ export async function getSchema(
   const res = await apiCall(
     `connectors/${connector_id}/schemas`,
     fivetranApiKey,
-    fivetranApiSecret
+    fivetranApiSecret,
+    'GET'
   );
   if (res.body) {
     return res.body.data;

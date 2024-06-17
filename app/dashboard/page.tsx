@@ -8,6 +8,7 @@ import {
   resyncConnectors,
   syncConnectors,
 } from '../lib/fivetran';
+import { Connector } from '../ui/connector-table';
 import ConnectorTable from '../ui/connector-table';
 import { getConnectors } from '../lib/fivetran';
 
@@ -19,19 +20,21 @@ type Credential = {
 type Group = {
   id: string;
   name: string;
+  created_at: string;
 };
 
-type Connector = {
-  id: string;
-  status: {
-    sync_state: string;
-  };
-  sync_frequency?: number;
-};
+// interface Connector {
+//   id: string;
+//   status: {
+//     sync_state: string;
+//   };
+//   sync_frequency?: number;
+// }
 
 type Type = {
   id: string;
   name: string;
+  created_at: string;
 };
 
 type ApiResponse<T> = {
@@ -51,6 +54,7 @@ export default function Page(): React.ReactElement {
   const [connectors, setConnectors] = useState<Connector[]>([]);
   const [pending, setPending] = useState<boolean>(true);
 
+  console.log('selectedGroup GLOBAL', selectedGroup);
   useEffect(() => {
     const userCookie = getCookie('user');
 
@@ -67,7 +71,8 @@ export default function Page(): React.ReactElement {
             let response: ApiResponse<Type[]> | void = await apiCall(
               'metadata/connector-types?limit=1000',
               fivetranApiKey,
-              fivetranApiSecret
+              fivetranApiSecret,
+              'GET'
             );
             if (
               response &&
@@ -96,20 +101,25 @@ export default function Page(): React.ReactElement {
               //Added to make sure response and the response body are available
               const groupsData = response.body.data.items;
               setGroups(groupsData);
+              console.log('GROUPDATA', groupsData);
               setSelectedGroup(groupsData[0]);
+              console.log('GROUPE DATA 0', groupsData[0]);
+              console.log('selected group', selectedGroup);
             }
 
             // Get connectors
             // Assuming you want to get connectors for the selected group (first group by default)
-            if (selectedGroup) {
-              const connectorsData = await getConnectors(
-                selectedGroup,
-                fivetranApiKey,
-                fivetranApiSecret
-              );
-              setConnectors(connectorsData);
-              setPending(false);
-            }
+
+            // if (selectedGroup) {
+            //   const connectorsData = await getConnectors(
+            //     selectedGroup,
+            //     fivetranApiKey,
+            //     fivetranApiSecret
+            //   );
+            //   console.log('line 112');
+            //   setConnectors(connectorsData);
+            //   setPending(false);
+            // }
           } catch (error) {
             console.error('Error fetching data:', error);
           }
@@ -123,6 +133,28 @@ export default function Page(): React.ReactElement {
       console.error('No user cookie found or cookie is not a string');
     }
   }, []);
+
+  useEffect(() => {
+    const getSelectGroup = async () => {
+      const userCookie = getCookie('user');
+      if (userCookie && typeof userCookie === 'string') {
+        const { fivetranApiKey, fivetranApiSecret } = JSON.parse(userCookie);
+        setCredentials({ fivetranApiKey, fivetranApiSecret });
+
+        if (selectedGroup) {
+          const connectorsData = await getConnectors(
+            selectedGroup,
+            fivetranApiKey,
+            fivetranApiSecret
+          );
+          console.log('line 112');
+          setConnectors(connectorsData);
+          setPending(false);
+        }
+      }
+    };
+    getSelectGroup();
+  }, [selectedGroup]);
 
   async function handleSelect(event: ChangeEvent<HTMLSelectElement>) {
     event.preventDefault();
@@ -246,7 +278,9 @@ export default function Page(): React.ReactElement {
       setConnectors(updatedConnectors);
     }
   }
-
+  console.log('HI');
+  console.log('pensed', pending);
+  console.log('connectors', connectors);
   return (
     <>
       <div className='mx-12 mt-5 font-bold text-lg items-center'>
