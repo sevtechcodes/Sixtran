@@ -14,26 +14,44 @@ interface ApiResponse {
   body: any;
 }
 
-
-export default function CredentialsForm (): React.ReactElement {
-  const [formData, setFormData] = useState<FormData>({apiKey: '', apiSecret: ''});
+export default function CredentialsForm(): React.ReactElement {
+  const [formData, setFormData] = useState<FormData>({
+    apiKey: '',
+    apiSecret: '',
+  });
   const router = useRouter();
 
-  function handleChange (event: React.ChangeEvent<HTMLInputElement>): void {
-    const {name, value} = event.target;
-    setFormData(prevFormData => ({...prevFormData, [name]: value}));
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   }
 
-  async function handleSubmit (event: React.FormEvent<HTMLFormElement>): Promise<void> {
+  async function handleSubmit(
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> {
     event.preventDefault();
-    if (formData.apiKey.trim().length === 0 || formData.apiSecret.trim().length === 0) {
+    if (
+      formData.apiKey.trim().length === 0 ||
+      formData.apiSecret.trim().length === 0
+    ) {
       return;
     }
-		
-    const response: ApiResponse | void = await apiCall('account/info', formData.apiKey, formData.apiSecret);
+
+    const response: ApiResponse | void = await apiCall(
+      'account/info',
+      formData.apiKey,
+      formData.apiSecret,
+      'GET'
+    );
 
     if (response && 'status' in response && response.status === 200) {
-      setCookie('user',  JSON.stringify({fivetranApiKey: formData.apiKey, fivetranApiSecret: formData.apiSecret}));
+      setCookie(
+        'user',
+        JSON.stringify({
+          fivetranApiKey: formData.apiKey,
+          fivetranApiSecret: formData.apiSecret,
+        })
+      );
       router.push('/dashboard');
     }
   }
@@ -41,16 +59,29 @@ export default function CredentialsForm (): React.ReactElement {
   return (
     <div className=''>
       <form onSubmit={handleSubmit} className='flex flex-col'>
-        <input name='apiKey' type='text' value={formData.apiKey} onChange={handleChange} placeholder='Fill in API Key'
+        <input
+          name='apiKey'
+          type='text'
+          value={formData.apiKey}
+          onChange={handleChange}
+          placeholder='Fill in API Key'
           className='border mt-10 border-black rounded px-2'
         ></input>
-        <input name='apiSecret' type='text' value={formData.apiSecret} onChange={handleChange} placeholder='Fill in API Secret'
+        <input
+          name='apiSecret'
+          type='text'
+          value={formData.apiSecret}
+          onChange={handleChange}
+          placeholder='Fill in API Secret'
           className='border mt-10 border-black rounded px-2'
         ></input>
-        <button type='submit'
+        <button
+          type='submit'
           className='mt-10 bg-black text-white text-2xl py-1 px-3 rounded-lg font-bold  hover:bg-[#5C5B61]'
-        >Update credentials</button>
+        >
+          Update credentials
+        </button>
       </form>
-    </ div>
+    </div>
   );
 }

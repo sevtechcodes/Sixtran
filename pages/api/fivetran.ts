@@ -1,6 +1,6 @@
 const URL = 'https://api.fivetran.com/v1/';
 
-export default async function handler (req, res) {
+export default async function handler(req, res) {
   const { method, endpoint, apiKey, apiSecret } = req.query;
 
   const headers = new Headers();
@@ -11,8 +11,9 @@ export default async function handler (req, res) {
     const response = await fetch(`${URL}${endpoint}`, {
       method: method,
       headers: headers,
-      body: method === 'GET'? undefined : JSON.stringify(req.body),
+      body: method === 'GET' ? undefined : JSON.stringify(req.body),
     });
+    console.log('response', response);
     const data = await response.json();
     res.status(response.status).json(data);
   } catch (error) {
