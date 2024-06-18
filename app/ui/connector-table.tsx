@@ -111,7 +111,8 @@ const ConnectorTable = ({
           <Link
             href={`dashboard/${row.id}`}
             passHref
-            className='hover:underline hover:font-bold'>
+            className='hover:underline hover:font-bold'
+          >
             {row.id}
           </Link>
         ),

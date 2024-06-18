@@ -11,6 +11,7 @@ import {
 import { Connector } from '../ui/connector-table';
 import ConnectorTable from '../ui/connector-table';
 import { getConnectors } from '../lib/fivetran';
+import Hello from '../ui/hello';
 
 type Credential = {
   fivetranApiKey: string;
@@ -310,6 +311,9 @@ export default function Page(): React.ReactElement {
             onSync={NormalSyncConnectors}
           />
         )}
+      </div>
+      <div>
+        <Hello />
       </div>
     </>
   );
