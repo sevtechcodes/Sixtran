@@ -8,4 +8,5 @@ const Hello = () => {
   );
 };
 
+export const Name = 'Brice';
 export default Hello;
