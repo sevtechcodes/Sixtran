@@ -1,54 +1,37 @@
 'use client';
-
 import { getCookie } from 'cookies-next';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 // import { getSchema, modifyTable } from '@/app/lib/fivetran';
 import { getSchema, modifyTable } from '../../lib/fivetran';
 // import { callBigQuery } from '@/app/lib/bigquery';
 import { callBigQuery } from '../../lib/bigquery';
 // import ConnectorDetail from '@/app/ui/connector-detail-table';
 import ConnectorDetail from '../../ui/connector-detail-table';
-
 type Credential = {
   fivetranApiKey: string;
   fivetranApiSecret: string;
 };
-
-type TablesToModify = string[];
-// {
-//   id: number;
-//   name_in_destination: object;
-//   table: object;
-//   enable: boolean;
-//   fivetranApiKey: string;
-//   fivetranApiSecret: string;
-// };
-
 export type FiveTranMetaData = {
   enabled: boolean;
   name_in_destination: string;
   schemas: any;
   tables: any;
 };
-
-interface PageProps {
+interface PagaProps {
   params: any;
 }
-
-export default function Page({ params }: PageProps) {
+export default function Page({ params }: PagaProps) {
   const id = params.connector_id;
   const [credentials, setCredentials] = useState<Credential | null>(null);
   const [schema, setSchema] = useState<FiveTranMetaData | null>(null);
   const [queries, setQueries] = useState([]);
   const [loaded, setLoaded] = useState<boolean>(false);
-
   useEffect(() => {
     console.log('from use effect');
     const { fivetranApiKey, fivetranApiSecret } = JSON.parse(
       getCookie('user') as string
     );
     setCredentials({ fivetranApiKey, fivetranApiSecret });
-
     async function getInitialData() {
       if (!fivetranApiKey || !fivetranApiSecret) {
         return;
@@ -57,9 +40,7 @@ export default function Page({ params }: PageProps) {
         // get schema
         let res = await getSchema(id, fivetranApiKey, fivetranApiSecret);
         const schema = res;
-
         const name: string = Object.keys(schema.schemas)[0];
-
         setSchema(schema.schemas[name]);
         // get queries for the dataset
         res = await callBigQuery(name);
@@ -72,10 +53,8 @@ export default function Page({ params }: PageProps) {
     }
     getInitialData();
   }, [id]);
-
-  async function disableTables(tablesToModify: TablesToModify) {
+  async function disableTables(tablesToModify) {
     for (const table of tablesToModify) {
-      console.log('TABLE', table);
       try {
         if (credentials === null || schema === null) {
           throw console.error();
@@ -96,14 +75,12 @@ export default function Page({ params }: PageProps) {
       }
     }
   }
-
-  async function enableTables(tablesToModify: TablesToModify) {
+  async function enableTables(tablesToModify) {
     for (const table of tablesToModify) {
       try {
         if (credentials === null || schema === null) {
           throw console.error();
         }
-
         await modifyTable(
           id,
           schema.name_in_destination,
@@ -120,7 +97,6 @@ export default function Page({ params }: PageProps) {
       }
     }
   }
-
   return schema === null ? (
     console.error('failed to fetch Fivetran Metadata')
   ) : (

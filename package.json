@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest"
+
   },
   "dependencies": {
     "@apollo/client": "^3.10.4",
