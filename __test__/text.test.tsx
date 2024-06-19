@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { act } from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, test, it, expect, vi } from 'vitest';
 import ConnectorDetail from '../app/ui/connector-detail-table';
@@ -6,6 +6,7 @@ import { FiveTranMetaData } from '../app/dashboard/[connector_id]/page'; // Adju
 import { mockUseRouter } from '../__mocks__/next/navigation';
 import CredentialsForm from '../app/ui/credentials-form';
 import '@testing-library/jest-dom';
+import userEvent from '@testing-library/user-event';
 import Page from '../app/setup/page';
 
 // mocks the router
@@ -17,13 +18,6 @@ vi.mock('next/navigation', () => ({
 vi.mock('cookies-next', () => ({
   getCookie: vi.fn(() => 'xyz'),
 }));
-
-// test('Home', () => {
-//   render(<CredentialsForm />);
-//   expect(
-//     screen.getByRole('button', { name: 'Update credentials' })
-//   ).toBeDefined();
-// });
 
 describe('Credential page', () => {
   it('Check if existing credentials are valid, then render the page', () => {
