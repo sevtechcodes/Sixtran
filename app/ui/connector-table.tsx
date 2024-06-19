@@ -301,6 +301,7 @@ const ConnectorTable = ({
         </button>
         <form onSubmit={freqConnectors}>
           <button
+            id='frequency-submit'
             type='submit'
             className='mx-5 py-1 px-1 text-s rounded-lg bg-black text-white font-bold hover:bg-[#5C5B61]'
             title='Change sync frequency for selected connectors'
