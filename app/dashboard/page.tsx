@@ -312,9 +312,6 @@ export default function Page(): React.ReactElement {
           />
         )}
       </div>
-      <div>
-        <Hello />
-      </div>
     </>
   );
 }

@@ -6,59 +6,37 @@ import { FiveTranMetaData } from '../app/dashboard/[connector_id]/page'; // Adju
 import { mockUseRouter } from '../__mocks__/next/navigation';
 import CredentialsForm from '../app/ui/credentials-form';
 import '@testing-library/jest-dom';
-import Hello from '../app/ui/hello';
 import Page from '../app/setup/page';
-import * as credentials from '../app/setup/page';
-import { getCookie } from 'cookies-next';
 
+// mocks the router
 vi.mock('next/navigation', () => ({
   useRouter: mockUseRouter,
 }));
 
+// mocks the cookie
 vi.mock('cookies-next', () => ({
   getCookie: vi.fn(() => 'xyz'),
 }));
 
-test('Home', () => {
-  render(<CredentialsForm />);
-  expect(
-    screen.getByRole('button', { name: 'Update credentials' })
-  ).toBeDefined();
-});
-
 // test('Home', () => {
-//   render(<Page />);
-//   const element = screen.queryByTestId('custom-element');
-// });
-
-// test('Home', () => {
-//   render(<Page />);
+//   render(<CredentialsForm />);
 //   expect(
-//     screen.getByRole('button', { name: 'Use existing credentials' })
+//     screen.getByRole('button', { name: 'Update credentials' })
 //   ).toBeDefined();
 // });
 
-describe('Existing credentials', () => {
-  it('should check if existing credentials are valid, then renders the page', () => {
+describe('Credential page', () => {
+  it('Check if existing credentials are valid, then render the page', () => {
     render(<Page />);
     const existingCredentials = screen.getByText('Use existing credentials');
     expect(existingCredentials).toBeInTheDocument();
   });
-});
 
-// test('Home', () => {
-//   render(<Page />);
-//   describe('Credentials test', () => {
-//     if (validCredentials === true) {
-//     }
-//   });
-// });
-
-describe('Hello component', () => {
-  it('renders "Hello World" in an h1 tag', () => {
-    render(<Hello />);
-    const h1Element = screen.getByText('Hello World');
-    expect(h1Element.tagName).toBe('H1');
+  it('Checks if the button Update credentials is present', () => {
+    render(<CredentialsForm />);
+    expect(
+      screen.getByRole('button', { name: 'Update credentials' })
+    ).toBeDefined();
   });
 });
 
@@ -71,8 +49,8 @@ describe('ConnectorDetail Component', () => {
     const mockSchema: FiveTranMetaData = {
       name_in_destination: 'Mock Dataset',
       tables: {},
-      enabled: true, // Placeholder value
-      schemas: 'schema', // Placeholder value
+      enabled: true,
+      schemas: 'schema',
     };
     const { getByPlaceholderText } = render(
       //The getByPlaceholderText is a query provided by the @testing-library/react library.
