@@ -14,6 +14,15 @@ type Credential = {
   fivetranApiSecret: string;
 };
 
+type TablesToModify = {
+  id: number;
+  name_in_destination: object;
+  table: {};
+  enable: boolean;
+  fivetranApiKey: string;
+  fivetranApiSecret: string;
+};
+
 export type FiveTranMetaData = {
   enabled: boolean;
   name_in_destination: string;
@@ -21,11 +30,11 @@ export type FiveTranMetaData = {
   tables: any;
 };
 
-interface PagaProps {
+interface PageProps {
   params: any;
 }
 
-export default function Page({ params }: PagaProps) {
+export default function Page({ params }: PageProps) {
   const id = params.connector_id;
   const [credentials, setCredentials] = useState<Credential | null>(null);
   const [schema, setSchema] = useState<FiveTranMetaData | null>(null);
@@ -63,7 +72,7 @@ export default function Page({ params }: PagaProps) {
     getInitialData();
   }, [id]);
 
-  async function disableTables(tablesToModify) {
+  async function disableTables(tablesToModify: TablesToModify[]) {
     for (const table of tablesToModify) {
       try {
         if (credentials === null || schema === null) {
@@ -86,7 +95,7 @@ export default function Page({ params }: PagaProps) {
     }
   }
 
-  async function enableTables(tablesToModify) {
+  async function enableTables(tablesToModify: TablesToModify[]) {
     for (const table of tablesToModify) {
       try {
         if (credentials === null || schema === null) {
