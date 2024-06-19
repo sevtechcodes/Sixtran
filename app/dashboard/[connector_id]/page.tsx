@@ -1,7 +1,7 @@
 'use client';
 
 import { getCookie } from 'cookies-next';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 // import { getSchema, modifyTable } from '@/app/lib/fivetran';
 import { getSchema, modifyTable } from '../../lib/fivetran';
 // import { callBigQuery } from '@/app/lib/bigquery';
@@ -14,14 +14,15 @@ type Credential = {
   fivetranApiSecret: string;
 };
 
-type TablesToModify = {
-  id: number;
-  name_in_destination: object;
-  table: {};
-  enable: boolean;
-  fivetranApiKey: string;
-  fivetranApiSecret: string;
-};
+type TablesToModify = string[];
+// {
+//   id: number;
+//   name_in_destination: object;
+//   table: object;
+//   enable: boolean;
+//   fivetranApiKey: string;
+//   fivetranApiSecret: string;
+// };
 
 export type FiveTranMetaData = {
   enabled: boolean;
@@ -72,8 +73,9 @@ export default function Page({ params }: PageProps) {
     getInitialData();
   }, [id]);
 
-  async function disableTables(tablesToModify: TablesToModify[]) {
+  async function disableTables(tablesToModify: TablesToModify) {
     for (const table of tablesToModify) {
+      console.log('TABLE', table);
       try {
         if (credentials === null || schema === null) {
           throw console.error();
@@ -95,7 +97,7 @@ export default function Page({ params }: PageProps) {
     }
   }
 
-  async function enableTables(tablesToModify: TablesToModify[]) {
+  async function enableTables(tablesToModify: TablesToModify) {
     for (const table of tablesToModify) {
       try {
         if (credentials === null || schema === null) {

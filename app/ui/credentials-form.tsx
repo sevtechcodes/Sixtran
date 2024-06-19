@@ -60,6 +60,7 @@ export default function CredentialsForm(): React.ReactElement {
     <div className=''>
       <form onSubmit={handleSubmit} className='flex flex-col'>
         <input
+          id='input-api-key'
           name='apiKey'
           type='text'
           value={formData.apiKey}
@@ -68,6 +69,7 @@ export default function CredentialsForm(): React.ReactElement {
           className='border mt-10 border-black rounded px-2'
         ></input>
         <input
+          id='input-api-secret'
           name='apiSecret'
           type='text'
           value={formData.apiSecret}
