@@ -79,36 +79,51 @@ describe('ConnectorDetail Component', () => {
 
 const BEFORE_ALL_TIMEOUT = 30000;
 
-const endpoint = 'groups';
+const endpoint = 'account/info';
 const fivetranApiKey = 'ry20pbspJZSlyxrQ';
-const fivetranApiSecret = 'Y5KJ0PUD1petnS99lmpceFWVF6bpb94D';
+const fivetranApiSecret = 'Ny5RezCXx4A4GmCccwjDvJxatTB7B3la';
+const credentials = `${fivetranApiKey}:${fivetranApiSecret}`;
+const encodedCredentials = Buffer.from(credentials).toString('base64');
+const authorizationHeader = `Basic ${encodedCredentials}`;
+
 describe('Test API', () => {
   let response: Response;
   let body: Array<{ [key: string]: unknown }>;
 
   beforeAll(async () => {
     try {
-      response = await fetch(
-        'https://api.fivetran.com/v1/method=GET&endpoint=groups&apiKey=ry20pbspJZSlyxrQ&apiSecret=Y5KJ0PUD1petnS99lmpceFWVF6bpb94D',
-        { method: 'POST', headers: { 'Content-Type': 'application/json' } }
-        // {
-        //   method: 'POST',
-        //   body: JSON.stringify(payload),
-        //   headers: { 'Content-Type': 'application/json' },
-        // }
+      const url = `https://api.fivetran.com/v1/${endpoint}?method=GET&apiKey=${fivetranApiKey}&apiSecret=${fivetranApiSecret}`;
+      response = await fetch(url, 
+        {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': authorizationHeader
+        }
+      }
       );
       body = await response.json();
+      console.log('body', body)
     } catch (error) {
       console.error('error', error);
+      throw error;
     }
   }, BEFORE_ALL_TIMEOUT);
+
   test('Should have response status 200', () => {
     expect(response.status).toBe(200);
   });
+
   test('Should have content-type', () => {
     expect(response.headers.get('Content-Type')).toBe('application/json');
   });
-  test('Should have array in the body', () => {
-    expectTypeOf(body).toBeArray();
+
+  test('Should have expected body structure', () => {
+    expect(body).toHaveProperty('code', 'Success');
+    expect(body).toHaveProperty('data');
+    // expect(body.data).toHaveProperty('account_id', 'deepened_heavy');
+    // expect(body.data).toHaveProperty('account_name', 'Codeworks');
+    // expect(body.data).toHaveProperty('user_id', 'escargot_skating');
+    // expect(body.data).toHaveProperty('system_key_id', null);
   });
 });
