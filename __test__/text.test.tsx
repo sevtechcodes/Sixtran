@@ -1,22 +1,14 @@
-import React, { act } from 'react';
+import React from 'react';
 import { render, screen } from '@testing-library/react';
-import {
-  beforeAll,
-  expectTypeOf,
-  describe,
-  test,
-  it,
-  expect,
-  vi,
-} from 'vitest';
+import { beforeAll, describe, test, it, expect, vi } from 'vitest';
 import ConnectorDetail from '../app/ui/connector-detail-table';
 import { FiveTranMetaData } from '../app/dashboard/[connector_id]/page'; // Adjust the import path as necessary
 import { mockUseRouter } from '../__mocks__/next/navigation';
 import CredentialsForm from '../app/ui/credentials-form';
 import '@testing-library/jest-dom';
-import userEvent from '@testing-library/user-event';
+
 import Page from '../app/setup/page';
-import { apiCall } from '../app/lib/fivetran';
+
 // mocks the router
 vi.mock('next/navigation', () => ({
   useRouter: mockUseRouter,
@@ -93,17 +85,15 @@ describe('Test API', () => {
   beforeAll(async () => {
     try {
       const url = `https://api.fivetran.com/v1/${endpoint}?method=GET&apiKey=${fivetranApiKey}&apiSecret=${fivetranApiSecret}`;
-      response = await fetch(url, 
-        {
+      response = await fetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': authorizationHeader
-        }
-      }
-      );
+          Authorization: authorizationHeader,
+        },
+      });
       body = await response.json();
-      console.log('body', body)
+      console.log('body', body);
     } catch (error) {
       console.error('error', error);
       throw error;
