@@ -23,13 +23,6 @@ type Group = {
   created_at: string;
 };
 
-// interface Connector {
-//   id: string;
-//   status: {
-//     sync_state: string;
-//   };
-//   sync_frequency?: number;
-// }
 
 type Type = {
   id: string;
@@ -47,7 +40,7 @@ type ApiResponse<T> = {
 };
 
 export default function Page(): React.ReactElement {
-  const [credentials, setCredentials] = useState<Credential | null>(null); //Added null checks to handle cases where cookies might not be present or credentials might be null
+  const [credentials, setCredentials] = useState<Credential | null>(null); 
   const [groups, setGroups] = useState<Group[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
@@ -67,7 +60,6 @@ export default function Page(): React.ReactElement {
           if (!fivetranApiKey || !fivetranApiSecret) return;
 
           try {
-            // Get types
             let response: ApiResponse<Type[]> | void = await apiCall(
               'metadata/connector-types?limit=1000',
               fivetranApiKey,
@@ -80,12 +72,10 @@ export default function Page(): React.ReactElement {
               response.body.data &&
               response.body.data.items
             ) {
-              //Added to make sure response and the response body are available
               const typesData = response.body.data.items;
               setTypes(typesData);
             }
 
-            // Get groups
             response = await apiCall(
               'groups',
               fivetranApiKey,
@@ -98,7 +88,6 @@ export default function Page(): React.ReactElement {
               response.body.data &&
               response.body.data.items
             ) {
-              //Added to make sure response and the response body are available
               const groupsData = response.body.data.items;
               setGroups(groupsData);
               console.log('GROUPDATA', groupsData);
@@ -107,19 +96,6 @@ export default function Page(): React.ReactElement {
               console.log('selected group', selectedGroup);
             }
 
-            // Get connectors
-            // Assuming you want to get connectors for the selected group (first group by default)
-
-            // if (selectedGroup) {
-            //   const connectorsData = await getConnectors(
-            //     selectedGroup,
-            //     fivetranApiKey,
-            //     fivetranApiSecret
-            //   );
-            //   console.log('line 112');
-            //   setConnectors(connectorsData);
-            //   setPending(false);
-            // }
           } catch (error) {
             console.error('Error fetching data:', error);
           }
@@ -161,7 +137,6 @@ export default function Page(): React.ReactElement {
     const group = groups.find((g) => g.id === event.target.value);
 
     if (group && credentials) {
-      //added this line to make sure there are groupt
       setSelectedGroup(group);
       setPending(true);
       const connectorsData = await getConnectors(
@@ -176,7 +151,6 @@ export default function Page(): React.ReactElement {
 
   async function pauseConnectors(connectorsToModify: Connector[]) {
     if (credentials) {
-      //checking if credenntials are there
       await modifyConnectors(
         connectorsToModify,
         credentials.fivetranApiKey,
@@ -198,7 +172,6 @@ export default function Page(): React.ReactElement {
 
   async function unpauseConnectors(connectorsToModify: Connector[]) {
     if (credentials) {
-      //checking if credenntials are there
       await modifyConnectors(
         connectorsToModify,
         credentials.fivetranApiKey,
@@ -220,7 +193,6 @@ export default function Page(): React.ReactElement {
 
   async function freqConnectors(connectorsToModify: Connector[], freq: number) {
     if (credentials) {
-      //checking if credenntials are there
       await modifyConnectors(
         connectorsToModify,
         credentials.fivetranApiKey,
@@ -239,7 +211,6 @@ export default function Page(): React.ReactElement {
 
   async function HistResyncConnectors(connectorsToResync: Connector[]) {
     if (credentials) {
-      //checking if credenntials are there
       await resyncConnectors(
         connectorsToResync,
         credentials.fivetranApiKey,
@@ -260,7 +231,6 @@ export default function Page(): React.ReactElement {
 
   async function NormalSyncConnectors(connectorsToSync: Connector[]) {
     if (credentials) {
-      //checking if credenntials are there
       await syncConnectors(
         connectorsToSync,
         credentials.fivetranApiKey,

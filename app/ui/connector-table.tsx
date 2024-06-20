@@ -24,7 +24,7 @@ const customStyles = {
   },
   headCells: {
     style: {
-      paddingLeft: '8px', // override the cell padding for head cells
+      paddingLeft: '8px', 
       paddingRight: '8px',
       fontSize: '1rem',
       fontWeight: '800',
@@ -32,22 +32,11 @@ const customStyles = {
   },
   cells: {
     style: {
-      paddingLeft: '8px', // override the cell padding for data cells
+      paddingLeft: '8px', 
       paddingRight: '8px',
     },
   },
 };
-
-// interface LabeledValue {
-//   label: string;
-// }
-
-// function printLabel(labeledObj: LabeledValue) {
-//   console.log(labeledObj.label);
-// }
-
-// let myObj = { size: 10, label: "Size 10 Object" };
-// printLabel(myObj);
 
 export interface Connector {
   id: string;
@@ -58,14 +47,6 @@ export interface Connector {
   };
   succeeded_at?: Date;
 }
-
-// interface Connector {
-//   id: string;
-//   status: {
-//     sync_state: string;
-//   };
-//   sync_frequency?: number;
-// }
 
 interface Props {
   data: Connector[];
@@ -94,7 +75,6 @@ const ConnectorTable = ({
   const columns = useMemo<
     {
       name: string;
-      // selector: (row: Row) => string | number | React.JSX.Element;
       selector: (row: Connector) => Primitive;
       sortable: boolean;
       sortFunction?: any;
@@ -125,7 +105,6 @@ const ConnectorTable = ({
         // @ts-ignore
         selector: (row: Connector) => (
           <>
-            {/* TODO: change this to use Image */}
             <img
               className='max-h-5 inline mx-1'
               src={types.filter((type) => type.id === row.service)[0].icons[0]}

@@ -12,30 +12,6 @@ import { Primitive } from 'react-data-table-component/dist/DataTable/types';
 import { FiveTranMetaData } from '../dashboard/[connector_id]/page';
 const TIMEFFRAMES: number[] = [1, 7, 14, 30, 90, 180, 365];
 
-// type CustomStyles = {
-//   rows: {
-//     style: {
-//       minHeight: string;
-//       fontSize: string;
-//       fontWeight: string;
-//     }
-//   }
-//   headCells: {
-//     style: {
-//       paddingLeft: string;
-//       paddingRight: string;
-//       fontSize: string;
-//       fontWeight: string;
-//     },
-//   },
-//   cells: {
-//     style: {
-//       paddingLeft: string;
-//       paddingRight: string;
-//     },
-//   },
-
-// }
 
 const customStyles = {
   rows: {
@@ -48,7 +24,7 @@ const customStyles = {
 
   headCells: {
     style: {
-      paddingLeft: '1px', // override the cell padding for head cells
+      paddingLeft: '1px', 
       paddingRight: '1px',
       fontSize: '1rem',
       fontWeight: '800',
@@ -56,7 +32,7 @@ const customStyles = {
   },
   cells: {
     style: {
-      paddingLeft: '1px', // override the cell padding for data cells
+      paddingLeft: '1px', 
       paddingRight: '1px',
     },
   },
@@ -147,7 +123,6 @@ export default function ConnectorDetail({
   const columns = useMemo<
     {
       name: string;
-      // selector: (row: Row) => string | number | React.JSX.Element;
       selector: (row: Row) => Primitive;
       sortable: boolean;
       minWidth?: string;
@@ -172,20 +147,8 @@ export default function ConnectorDetail({
         name: 'MERGE',
         selector: (row: Row) => row.merge_queries,
         sortable: true,
-        hide: 'md' as Media, //go from Tailwind to CSS ClassName
+        hide: 'md' as Media, 
       },
-      // {
-      //   name: 'UPDATE',
-      //   selector: row => row.update_queries,
-      //   sortable: true,
-      //   hide: 'md' as Media,
-      // },
-      // {
-      //   name: 'DELETE',
-      //   selector: row => row.delete_queries,
-      //   sortable: true,
-      //   hide: 'md' as Media,
-      // },
       {
         name: 'Inserted',
         selector: (row: Row) => row.inserted,

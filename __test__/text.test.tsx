@@ -2,11 +2,10 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { beforeAll, describe, test, it, expect, vi } from 'vitest';
 import ConnectorDetail from '../app/ui/connector-detail-table';
-import { FiveTranMetaData } from '../app/dashboard/[connector_id]/page'; // Adjust the import path as necessary
+import { FiveTranMetaData } from '../app/dashboard/[connector_id]/page'; 
 import { mockUseRouter } from '../__mocks__/next/navigation';
 import CredentialsForm from '../app/ui/credentials-form';
 import '@testing-library/jest-dom';
-
 import Page from '../app/setup/page';
 
 // mocks the router
@@ -60,14 +59,6 @@ describe('ConnectorDetail Component', () => {
   });
 });
 
-// describe('Test API call', () => {
-//   it('Should return 200 status', async () => {
-//     const mockData = {
-//       data: 'xyz',
-//     };
-//     fetch.mockResolvedValue();
-//   });
-// });
 
 const BEFORE_ALL_TIMEOUT = 30000;
 

@@ -1,11 +1,8 @@
 'use client';
 import { getCookie } from 'cookies-next';
 import { useEffect, useState, useMemo } from 'react';
-// import { getSchema, modifyTable } from '@/app/lib/fivetran';
 import { getSchema, modifyTable } from '../../lib/fivetran';
-// import { callBigQuery } from '@/app/lib/bigquery';
 import { callBigQuery } from '../../lib/bigquery';
-// import ConnectorDetail from '@/app/ui/connector-detail-table';
 import ConnectorDetail from '../../ui/connector-detail-table';
 type Credential = {
   fivetranApiKey: string;
