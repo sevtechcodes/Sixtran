@@ -20,7 +20,7 @@ Except for the regular suspects; git, Node, npm, you need these things to work o
 1. Clone the repo
 
 ```
-git clone git@github.com:Elsass1/Sixtran.git
+git clone git@github.com:sevtechcodes/Sixtran.git
 ```
 
 2. Install dependencies
