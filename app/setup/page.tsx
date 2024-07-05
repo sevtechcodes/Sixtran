@@ -5,18 +5,16 @@ import { useRouter } from 'next/navigation';
 import CredentialsForm from '../ui/credentials-form';
 import { getCookie } from 'cookies-next';
 
-export default function Page(): React.ReactElement {
+export default function Page (): React.ReactElement {
   const [validCredentials, setValidCredentials] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
     const cookie = getCookie('user');
-    console.log('cookie', cookie);
-    console.log('getCookie', getCookie);
     if (cookie) setValidCredentials(true);
   }, []);
 
-  function handleClick(): void {
+  function handleClick (): void {
     router.push('/dashboard');
   }
 

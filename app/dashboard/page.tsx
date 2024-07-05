@@ -39,15 +39,14 @@ type ApiResponse<T> = {
   };
 };
 
-export default function Page(): React.ReactElement {
-  const [credentials, setCredentials] = useState<Credential | null>(null); 
+export default function Page (): React.ReactElement {
+  const [credentials, setCredentials] = useState<Credential | null>(null);
   const [groups, setGroups] = useState<Group[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
   const [connectors, setConnectors] = useState<Connector[]>([]);
   const [pending, setPending] = useState<boolean>(true);
 
-  console.log('selectedGroup GLOBAL', selectedGroup);
   useEffect(() => {
     const userCookie = getCookie('user');
 
@@ -90,10 +89,7 @@ export default function Page(): React.ReactElement {
             ) {
               const groupsData = response.body.data.items;
               setGroups(groupsData);
-              console.log('GROUPDATA', groupsData);
               setSelectedGroup(groupsData[0]);
-              console.log('GROUPE DATA 0', groupsData[0]);
-              console.log('selected group', selectedGroup);
             }
 
           } catch (error) {
@@ -123,7 +119,6 @@ export default function Page(): React.ReactElement {
             fivetranApiKey,
             fivetranApiSecret
           );
-          console.log('line 112');
           setConnectors(connectorsData);
           setPending(false);
         }
@@ -132,7 +127,7 @@ export default function Page(): React.ReactElement {
     getSelectGroup();
   }, [selectedGroup]);
 
-  async function handleSelect(event: ChangeEvent<HTMLSelectElement>) {
+  async function handleSelect (event: ChangeEvent<HTMLSelectElement>) {
     event.preventDefault();
     const group = groups.find((g) => g.id === event.target.value);
 
@@ -149,7 +144,7 @@ export default function Page(): React.ReactElement {
     }
   }
 
-  async function pauseConnectors(connectorsToModify: Connector[]) {
+  async function pauseConnectors (connectorsToModify: Connector[]) {
     if (credentials) {
       await modifyConnectors(
         connectorsToModify,
@@ -170,7 +165,7 @@ export default function Page(): React.ReactElement {
     }
   }
 
-  async function unpauseConnectors(connectorsToModify: Connector[]) {
+  async function unpauseConnectors (connectorsToModify: Connector[]) {
     if (credentials) {
       await modifyConnectors(
         connectorsToModify,
@@ -191,7 +186,7 @@ export default function Page(): React.ReactElement {
     }
   }
 
-  async function freqConnectors(connectorsToModify: Connector[], freq: number) {
+  async function freqConnectors (connectorsToModify: Connector[], freq: number) {
     if (credentials) {
       await modifyConnectors(
         connectorsToModify,
@@ -209,7 +204,7 @@ export default function Page(): React.ReactElement {
     }
   }
 
-  async function HistResyncConnectors(connectorsToResync: Connector[]) {
+  async function HistResyncConnectors (connectorsToResync: Connector[]) {
     if (credentials) {
       await resyncConnectors(
         connectorsToResync,
@@ -229,7 +224,7 @@ export default function Page(): React.ReactElement {
     }
   }
 
-  async function NormalSyncConnectors(connectorsToSync: Connector[]) {
+  async function NormalSyncConnectors (connectorsToSync: Connector[]) {
     if (credentials) {
       await syncConnectors(
         connectorsToSync,
@@ -248,9 +243,6 @@ export default function Page(): React.ReactElement {
       setConnectors(updatedConnectors);
     }
   }
-  console.log('HI');
-  console.log('pensed', pending);
-  console.log('connectors', connectors);
   return (
     <>
       <div className='mx-12 mt-5 font-bold text-lg items-center'>

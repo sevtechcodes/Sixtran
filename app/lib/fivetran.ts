@@ -3,7 +3,7 @@ interface ApiCallInterface {
   body: any;
 }
 
-export async function apiCall(
+export async function apiCall (
   endpoint: string,
   apiKey: any,
   apiSecret: any,
@@ -27,7 +27,7 @@ export async function apiCall(
   }
 }
 
-export async function getSchema(
+export async function getSchema (
   connector_id: string,
   fivetranApiKey: string,
   fivetranApiSecret: string
@@ -43,7 +43,7 @@ export async function getSchema(
   }
 }
 
-export async function getConnectors(group, fivetranApiKey, fivetranApiSecret) {
+export async function getConnectors (group, fivetranApiKey, fivetranApiSecret) {
   const res = await apiCall(
     `groups/${group.id}/connectors`,
     fivetranApiKey,
@@ -53,7 +53,7 @@ export async function getConnectors(group, fivetranApiKey, fivetranApiSecret) {
   return res.body.data.items;
 }
 
-export async function modifyConnectors(
+export async function modifyConnectors (
   connectors,
   fivetranApiKey,
   fivetranApiSecret,
@@ -76,7 +76,7 @@ export async function modifyConnectors(
   }
 }
 
-export async function resyncConnectors(
+export async function resyncConnectors (
   connectors,
   fivetranApiKey,
   fivetranApiSecret
@@ -97,7 +97,7 @@ export async function resyncConnectors(
   }
 }
 
-export async function syncConnectors(
+export async function syncConnectors (
   connectors,
   fivetranApiKey,
   fivetranApiSecret
@@ -119,7 +119,7 @@ export async function syncConnectors(
   }
 }
 
-export async function modifyTable(
+export async function modifyTable (
   connector_id,
   schema,
   table,

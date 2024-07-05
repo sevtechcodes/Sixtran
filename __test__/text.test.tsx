@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { beforeAll, describe, test, it, expect, vi } from 'vitest';
 import ConnectorDetail from '../app/ui/connector-detail-table';
-import { FiveTranMetaData } from '../app/dashboard/[connector_id]/page'; 
+import { FiveTranMetaData } from '../app/dashboard/[connector_id]/page';
 import { mockUseRouter } from '../__mocks__/next/navigation';
 import CredentialsForm from '../app/ui/credentials-form';
 import '@testing-library/jest-dom';
@@ -59,7 +59,6 @@ describe('ConnectorDetail Component', () => {
   });
 });
 
-
 const BEFORE_ALL_TIMEOUT = 30000;
 
 const endpoint = 'account/info';
@@ -84,7 +83,6 @@ describe('Test API', () => {
         },
       });
       body = await response.json();
-      console.log('body', body);
     } catch (error) {
       console.error('error', error);
       throw error;
@@ -102,9 +100,5 @@ describe('Test API', () => {
   test('Should have expected body structure', () => {
     expect(body).toHaveProperty('code', 'Success');
     expect(body).toHaveProperty('data');
-    // expect(body.data).toHaveProperty('account_id', 'deepened_heavy');
-    // expect(body.data).toHaveProperty('account_name', 'Codeworks');
-    // expect(body.data).toHaveProperty('user_id', 'escargot_skating');
-    // expect(body.data).toHaveProperty('system_key_id', null);
   });
 });

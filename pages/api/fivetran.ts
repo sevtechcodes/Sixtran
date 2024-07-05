@@ -1,6 +1,6 @@
 const URL = 'https://api.fivetran.com/v1/';
 
-export default async function handler(req, res) {
+export default async function handler (req, res) {
   const { method, endpoint, apiKey, apiSecret } = req.query;
 
   const headers = new Headers();

@@ -24,7 +24,7 @@ const customStyles = {
 
   headCells: {
     style: {
-      paddingLeft: '1px', 
+      paddingLeft: '1px',
       paddingRight: '1px',
       fontSize: '1rem',
       fontWeight: '800',
@@ -32,7 +32,7 @@ const customStyles = {
   },
   cells: {
     style: {
-      paddingLeft: '1px', 
+      paddingLeft: '1px',
       paddingRight: '1px',
     },
   },
@@ -57,7 +57,7 @@ interface Table {
   mar: number;
 }
 
-export default function ConnectorDetail({
+export default function ConnectorDetail ({
   schema,
   queries,
   disable,
@@ -128,73 +128,73 @@ export default function ConnectorDetail({
       minWidth?: string;
       grow?: number;
       hide?: Media | undefined;
-    }[]
-  >(
-    () => [
-      {
-        name: 'Table name',
-        selector: (row: Row) => row.name,
-        sortable: true,
-        minWidth: '250px',
-        grow: 2,
-      },
-      {
-        name: 'SELECT',
-        selector: (row: Row) => row.select_queries,
-        sortable: true,
-      },
-      {
-        name: 'MERGE',
-        selector: (row: Row) => row.merge_queries,
-        sortable: true,
-        hide: 'md' as Media, 
-      },
-      {
-        name: 'Inserted',
-        selector: (row: Row) => row.inserted,
-        sortable: true,
-        hide: 'md' as Media,
-      },
-      {
-        name: 'Updated',
-        selector: (row: Row) => row.updated,
-        sortable: true,
-        hide: 'md' as Media,
-      },
-      {
-        name: 'Deleted',
-        selector: (row: Row) => row.deleted,
-        sortable: true,
-        hide: 'md' as Media,
-      },
-      {
-        name: 'Active',
-        selector: (row: Row) => row.mar,
-        sortable: true,
-      },
-      {
-        name: 'Total',
-        selector: (row: Row) => row.total_rows,
-        sortable: true,
-        hide: 'md' as Media,
-      },
-      {
-        name: 'Enabled',
-        // below: not intended by npm creators to use HTML elements but seems to work.
-        // @ts-ignore
-        selector: (row: Row) =>
-          row.enabled ? (
-            <CheckIcon className='inline h-6 mx-2' />
-          ) : (
-            <XMarkIcon className='inline h-6 mx-2' />
-          ),
-        sortable: true,
-      },
-    ],
-    []
-  );
+        }[]
+        >(
+        () => [
+          {
+            name: 'Table name',
+            selector: (row: Row) => row.name,
+            sortable: true,
+            minWidth: '250px',
+            grow: 2,
+          },
+          {
+            name: 'SELECT',
+            selector: (row: Row) => row.select_queries,
+            sortable: true,
+          },
+          {
+            name: 'MERGE',
+            selector: (row: Row) => row.merge_queries,
+            sortable: true,
+            hide: 'md' as Media,
+          },
+          {
+            name: 'Inserted',
+            selector: (row: Row) => row.inserted,
+            sortable: true,
+            hide: 'md' as Media,
+          },
+          {
+            name: 'Updated',
+            selector: (row: Row) => row.updated,
+            sortable: true,
+            hide: 'md' as Media,
+          },
+          {
+            name: 'Deleted',
+            selector: (row: Row) => row.deleted,
+            sortable: true,
+            hide: 'md' as Media,
+          },
+          {
+            name: 'Active',
+            selector: (row: Row) => row.mar,
+            sortable: true,
+          },
+          {
+            name: 'Total',
+            selector: (row: Row) => row.total_rows,
+            sortable: true,
+            hide: 'md' as Media,
+          },
+          {
+            name: 'Enabled',
+            // below: not intended by npm creators to use HTML elements but seems to work.
+            // @ts-ignore
+            selector: (row: Row) =>
+              row.enabled ? (
+                <CheckIcon className='inline h-6 mx-2' />
+              ) : (
+                <XMarkIcon className='inline h-6 mx-2' />
+              ),
+            sortable: true,
+          },
+        ],
+        []
+        );
 
-  function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
+  function handleChange (event: React.ChangeEvent<HTMLSelectElement>) {
     setTimeframe(Number(event.target.value));
   }
 
@@ -209,12 +209,12 @@ export default function ConnectorDetail({
     setSelectedRows(state.selectedRows);
   }, []);
 
-  function handleClearRows() {
+  function handleClearRows () {
     setToggleClearRows(!toggledClearRows);
     setSelectedRows([]);
   }
 
-  function disableTables(event: React.MouseEvent<HTMLButtonElement>) {
+  function disableTables (event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     const tablesToDisable: string[] = selectedRows
       .map((row: Row) => row.name)
@@ -223,7 +223,7 @@ export default function ConnectorDetail({
     handleClearRows();
   }
 
-  function enableTables(event: React.MouseEvent<HTMLButtonElement>) {
+  function enableTables (event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     const tablesToEnable: string[] = selectedRows
       .map((row: Row) => row.name)

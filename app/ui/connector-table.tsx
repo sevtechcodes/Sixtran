@@ -24,7 +24,7 @@ const customStyles = {
   },
   headCells: {
     style: {
-      paddingLeft: '8px', 
+      paddingLeft: '8px',
       paddingRight: '8px',
       fontSize: '1rem',
       fontWeight: '800',
@@ -32,7 +32,7 @@ const customStyles = {
   },
   cells: {
     style: {
-      paddingLeft: '8px', 
+      paddingLeft: '8px',
       paddingRight: '8px',
     },
   },
@@ -80,103 +80,103 @@ const ConnectorTable = ({
       sortFunction?: any;
       grow?: number;
       hide?: Media | undefined;
-    }[]
-  >(
-    () => [
-      {
-        name: 'Connector ID',
-        // below: not intended by npm creators to use HTML elements but seems to work.
-        // @ts-ignore
-        selector: (row: Connector) => (
-          <Link
-            href={`dashboard/${row.id}`}
-            passHref
-            className='hover:underline hover:font-bold'
-          >
-            {row.id}
-          </Link>
-        ),
-        sortable: true,
-        sortFunction: (a: Connector, b: Connector) => b.id.localeCompare(a.id),
-      },
-      {
-        name: 'Source',
-        // below: not intended by npm creators to use HTML elements but seems to work.
-        // @ts-ignore
-        selector: (row: Connector) => (
-          <>
-            <img
-              className='max-h-5 inline mx-1'
-              src={types.filter((type) => type.id === row.service)[0].icons[0]}
-              alt={row.service}
-            ></img>
-            <span>
-              {types.filter((type) => type.id === row.service)[0].name}
-            </span>
-          </>
-        ),
-        sortable: true,
-        sortFunction: (a: Connector, b: Connector) =>
-          b.service.localeCompare(a.service),
-      },
-      {
-        name: 'Sync Frequency',
-        selector: (row: Connector) =>
-          formatDuration(roundMinutes(row.sync_frequency)),
-        sortable: true,
-        sortFunction: (a: Connector, b: Connector) =>
-          a.sync_frequency - b.sync_frequency,
-        hide: 'md' as Media,
-      },
-      {
-        name: 'Sync Status',
-        // below: not intended by npm creators to use HTML elements but seems to work.
-        // @ts-ignore
-        selector: (row: Connector) => {
-          switch (row.status.sync_state) {
-            case 'paused':
-              return (
-                <div className='px-3 py-2 rounded-2xl bg-gray-200 text-gray-700'>
+        }[]
+        >(
+        () => [
+          {
+            name: 'Connector ID',
+            // below: not intended by npm creators to use HTML elements but seems to work.
+            // @ts-ignore
+            selector: (row: Connector) => (
+              <Link
+                href={`dashboard/${row.id}`}
+                passHref
+                className='hover:underline hover:font-bold'
+              >
+                {row.id}
+              </Link>
+            ),
+            sortable: true,
+            sortFunction: (a: Connector, b: Connector) => b.id.localeCompare(a.id),
+          },
+          {
+            name: 'Source',
+            // below: not intended by npm creators to use HTML elements but seems to work.
+            // @ts-ignore
+            selector: (row: Connector) => (
+              <>
+                <img
+                  className='max-h-5 inline mx-1'
+                  src={types.filter((type) => type.id === row.service)[0].icons[0]}
+                  alt={row.service}
+                ></img>
+                <span>
+                  {types.filter((type) => type.id === row.service)[0].name}
+                </span>
+              </>
+            ),
+            sortable: true,
+            sortFunction: (a: Connector, b: Connector) =>
+              b.service.localeCompare(a.service),
+          },
+          {
+            name: 'Sync Frequency',
+            selector: (row: Connector) =>
+              formatDuration(roundMinutes(row.sync_frequency)),
+            sortable: true,
+            sortFunction: (a: Connector, b: Connector) =>
+              a.sync_frequency - b.sync_frequency,
+            hide: 'md' as Media,
+          },
+          {
+            name: 'Sync Status',
+            // below: not intended by npm creators to use HTML elements but seems to work.
+            // @ts-ignore
+            selector: (row: Connector) => {
+              switch (row.status.sync_state) {
+              case 'paused':
+                return (
+                  <div className='px-3 py-2 rounded-2xl bg-gray-200 text-gray-700'>
                   Paused
-                </div>
-              );
-            case 'scheduled':
-              return (
-                <div className='px-3 py-2 rounded-2xl bg-rose-50 text-rose-700'>
+                  </div>
+                );
+              case 'scheduled':
+                return (
+                  <div className='px-3 py-2 rounded-2xl bg-rose-50 text-rose-700'>
                   Scheduled
-                </div>
-              );
-            case 'syncing':
-              return (
-                <div className='px-3 py-2 rounded-2xl bg-green-200 text-green-700'>
+                  </div>
+                );
+              case 'syncing':
+                return (
+                  <div className='px-3 py-2 rounded-2xl bg-green-200 text-green-700'>
                   Syncing
-                </div>
-              );
-            default:
-              return <div></div>;
-          }
-        },
-        sortable: true,
-        sortFunction: (a: Connector, b: Connector) =>
-          a.status.sync_state.localeCompare(b.status.sync_state),
-        hide: 'md' as Media,
-      },
-      {
-        name: 'Last Sync',
-        selector: (row: Connector) =>
-          row.succeeded_at
-            ? formatDistanceToNow(new Date(row.succeeded_at))
-            : 'Never',
-        sortable: true,
-        sortFunction: (a: Connector, b: Connector) => {
-          if (!a.succeeded_at) return -1;
-          if (!b.succeeded_at) return 1;
-          return compareAsc(new Date(a.succeeded_at), new Date(b.succeeded_at));
-        },
-      },
-    ],
-    []
-  );
+                  </div>
+                );
+              default:
+                return <div></div>;
+              }
+            },
+            sortable: true,
+            sortFunction: (a: Connector, b: Connector) =>
+              a.status.sync_state.localeCompare(b.status.sync_state),
+            hide: 'md' as Media,
+          },
+          {
+            name: 'Last Sync',
+            selector: (row: Connector) =>
+              row.succeeded_at
+                ? formatDistanceToNow(new Date(row.succeeded_at))
+                : 'Never',
+            sortable: true,
+            sortFunction: (a: Connector, b: Connector) => {
+              if (!a.succeeded_at) return -1;
+              if (!b.succeeded_at) return 1;
+              return compareAsc(new Date(a.succeeded_at), new Date(b.succeeded_at));
+            },
+          },
+        ],
+        []
+        );
 
   const filteredData = useMemo(() => {
     if (!searchTerm) return data;
@@ -191,40 +191,36 @@ const ConnectorTable = ({
     setSelectedRows(state.selectedRows);
   }, []);
 
-  function handleClearRows() {
+  function handleClearRows () {
     setToggleClearRows(!toggledClearRows);
     setSelectedRows([]);
   }
 
-  async function pauseConnectors() {
+  async function pauseConnectors () {
     await onPause(selectedRows);
     handleClearRows();
   }
 
-  async function unpauseConnectors() {
+  async function unpauseConnectors () {
     await onUnpause(selectedRows);
     handleClearRows();
   }
 
-  async function freqConnectors(event: React.FormEvent<HTMLFormElement>) {
+  async function freqConnectors (event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     onFreq(selectedRows, selectedFrequency);
     handleClearRows();
   }
 
-  async function resyncConnectors() {
+  async function resyncConnectors () {
     onResync(selectedRows);
     handleClearRows();
   }
 
-  async function syncConnectors() {
+  async function syncConnectors () {
     onSync(selectedRows);
     handleClearRows();
   }
-  console.log('COL', columns);
-  console.log('DATA', filteredData);
-  console.log('TOGCLEAR', toggledClearRows);
-  console.log('CS', customStyles);
 
   return (
     <>

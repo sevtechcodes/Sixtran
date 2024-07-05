@@ -14,19 +14,19 @@ interface ApiResponse {
   body: any;
 }
 
-export default function CredentialsForm(): React.ReactElement {
+export default function CredentialsForm (): React.ReactElement {
   const [formData, setFormData] = useState<FormData>({
     apiKey: '',
     apiSecret: '',
   });
   const router = useRouter();
 
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
+  function handleChange (event: React.ChangeEvent<HTMLInputElement>): void {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   }
 
-  async function handleSubmit(
+  async function handleSubmit (
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> {
     event.preventDefault();

@@ -17,19 +17,18 @@ export type FiveTranMetaData = {
 interface PagaProps {
   params: any;
 }
-export default function Page({ params }: PagaProps) {
+export default function Page ({ params }: PagaProps) {
   const id = params.connector_id;
   const [credentials, setCredentials] = useState<Credential | null>(null);
   const [schema, setSchema] = useState<FiveTranMetaData | null>(null);
   const [queries, setQueries] = useState([]);
   const [loaded, setLoaded] = useState<boolean>(false);
   useEffect(() => {
-    console.log('from use effect');
     const { fivetranApiKey, fivetranApiSecret } = JSON.parse(
       getCookie('user') as string
     );
     setCredentials({ fivetranApiKey, fivetranApiSecret });
-    async function getInitialData() {
+    async function getInitialData () {
       if (!fivetranApiKey || !fivetranApiSecret) {
         return;
       }
@@ -50,7 +49,7 @@ export default function Page({ params }: PagaProps) {
     }
     getInitialData();
   }, [id]);
-  async function disableTables(tablesToModify) {
+  async function disableTables (tablesToModify) {
     for (const table of tablesToModify) {
       try {
         if (credentials === null || schema === null) {
@@ -72,7 +71,7 @@ export default function Page({ params }: PagaProps) {
       }
     }
   }
-  async function enableTables(tablesToModify) {
+  async function enableTables (tablesToModify) {
     for (const table of tablesToModify) {
       try {
         if (credentials === null || schema === null) {
